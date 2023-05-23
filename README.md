@@ -1,5 +1,5 @@
 # fiberseq-qc
-QC plots and statistics for the fiberseq-smk pipeline
+QC plots and statistics
 
 
 <h3>External Software Requirements</h3>
