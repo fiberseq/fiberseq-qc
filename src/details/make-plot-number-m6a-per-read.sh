@@ -5,15 +5,6 @@
 # histogram of per read #m6A on read / # of A/T bases on read
 # histogram of the ec field's distribution
 
-# this depends upon rust's cargo and fibertools developed by Mitchell
-#   module load gcc/10.2.0
-#   module load cmake/3.21.1
-#   cargo install --git https://github.com/mrvollger/fibertools-rs
-#   ft extract --m6a - <BAM> | cut -f 4,10 | head
-# The tools takes into account M6A vs CpG methylations
-
-# Can you change the name of "qc_m6A.ec.pdf" to "qc_ccs_passes.pdf" - now factored out to Snakefile
-
 set -exuo pipefail
 
 if [[ $# != 5 ]]; then
@@ -28,9 +19,6 @@ ec_outpdf=$4
 outstat=$5
 
 ftype=m6a
-#ec_outpdf=$(basename "${outpdf}" | sed 's/\(.*\)\..*/\1/')".ec.pdf"
-#ec_outpdf=$(dirname "${outpdf}")"/${ec_outpdf}"
-#ec_outpdf=$(dirname "${outpdf}")"/qc_ccs_passes.pdf"
 tmpd=${TMPDIR}/$(whoami)/$$
 if [[ ! -s $inp ]]; then
     printf "Problem finding 1 file: %s\n" $inp
