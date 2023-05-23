@@ -6,7 +6,7 @@ if ( $#argv != 3 ) then
   printf "%s\n" $0:t
   printf "  <base-output-dir>\n"
   printf "  <sample-name>\n"
-  printf "  <sample-name.fiberseq.all.tbl.gz\n"
+  printf "  <sample-name.fiberseq.all.tbl.gz>\n"
   exit -1
 endif
 
