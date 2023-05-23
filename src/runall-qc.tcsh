@@ -18,8 +18,11 @@ set tableinp = $3 # <samplenm>.fiberseq.all.tbl.gz
 
 mkdir -p $baseoutd
 
+set src_dir = `readlink -f $0`
+set src_dir = $src_dir:h
+
 # qc_msp
-($0:h/details/make-plot-msp-lengths.sh \
+($src_dir/details/make-plot-msp-lengths.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_msp_lengths.pdf \
@@ -29,7 +32,7 @@ set statsfs = ($baseoutd/$samplenm.qc_msp_lengths.intermediate.stat.txt)
 set pdfs = ($baseoutd/$samplenm.qc_msp_lengths.pdf)
 
 # qc_nuc
-($0:h/details/make-plot-nuc-lengths.sh \
+($src_dir/details/make-plot-nuc-lengths.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_nuc_lengths.pdf \
@@ -39,7 +42,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_nuc.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_nuc_lengths.pdf)
 
 # qc_m6a
-($0:h/details/make-plot-number-m6a-per-read.sh \
+($src_dir/details/make-plot-number-m6a-per-read.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_m6a_per_read.pdf \
@@ -50,7 +53,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt $baseou
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_m6a_per_read.pdf $baseoutd/$samplenm.qc_ccs_passes.pdf)
 
 # qc_nucs_per_read
-($0:h/details/make-plot-number-nucs-per-read.sh \
+($src_dir/details/make-plot-number-nucs-per-read.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_number_nucs_per_read.pdf \
@@ -60,7 +63,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_number_nucs_per_read.intermediate
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_number_nucs_per_read.pdf)
 
 # qc_readlength_per_nuc
-($0:h/details/make-plot-readlength-per-nuc.sh \
+($src_dir/details/make-plot-readlength-per-nuc.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_readlength_per_nuc.pdf \
@@ -70,7 +73,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlength_per_nuc.intermediate.s
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlength_per_nuc.pdf)
 
 # qc_readlengths
-($0:h/details/make-plot-readlengths.sh \
+($src_dir/details/make-plot-readlengths.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_readlengths.pdf \
@@ -80,7 +83,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlengths.pdf)
 
 # qc_rq
-($0:h/details/make-plot-rq.sh \
+($src_dir/details/make-plot-rq.sh \
   $samplenm \
   $tableinp \
   $baseoutd/$samplenm.qc_readquality.pdf \
@@ -97,7 +100,7 @@ cat $statsfs \
 
 # create html outputs
 set fs = ($pdfs $statsfs)
-details/make-html.tcsh \
+$src_dir/details/make-html.tcsh \
   $samplenm \
   $baseoutd/$samplenm.overview.html \
   $baseoutd/$samplenm.qc.html \
