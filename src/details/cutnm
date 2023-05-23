@@ -1,0 +1,110 @@
+#!/bin/bash
+# author : sjn
+# date : July.2019
+set -e -o pipefail
+
+usage () {
+  echo -e 'Usage: $0 [-i] [-t <string>] comma-or-space-separated-colnames [input-file]' >&2
+}
+
+exit_bad() {
+  exit 2
+}
+
+exit_good() {
+  exit 0
+}
+
+if [[ $# == 0 ]]; then
+  usage
+fi
+
+i="inactive"
+m="inactive"
+t="\t"
+while getopts "ihmt:" o; do
+  case "${o}" in
+    t)
+      t=${OPTARG}
+      ;;
+    i)
+      i="active"
+      ;;
+    h) # help
+      usage
+      exit_good
+      ;;
+    m)
+      m="active"
+      ;;
+    :)
+      echo "Error: -${OPTARG} requires an argument."
+      exit_bad
+      ;;
+    *)
+      usage
+      exit_bad
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+filenm=$(echo "${@: -1}")
+colnms=${@:1:$#-1}
+if [ ! -s $filenm ]; then
+  if [ "${filenm}" != "-" ]; then
+    colnms=${@:1:$#}
+  fi
+  filenm=/dev/stdin
+fi
+colnms=$(echo $colnms | tr ' ' ',' | sed -e 's;,,\+;,;g')
+if [ "${i}" == "active" ]; then # ignore case
+  colnms=$(echo $colnms | awk '{ print tolower($0); }')
+fi
+
+awk -v cols=$colnms -v delim="${t}" -v caseignore="${i}" \
+'BEGIN { \
+  FS=delim; OFS=FS; \
+  n=split(cols,out,","); \
+  mn=n; \
+} \
+NR==1 { \
+  for (i=1; i<=NF; i++) \
+    orig_nms[i]=$i; \
+  if ( caseignore == "active" ) {
+    for (i=1; i<=NF; i++) \
+      $i = tolower($i); \
+  } \
+  for (i=1; i<=NF; i++) \
+    ix[$i] = i; \
+  for (i in out) { \
+    if (!(out[i] in ix)) { \
+      none[i]; \
+      mn -= 1; \
+    } \
+  } \
+  if(n>0) { \
+    for (i=1; i<=n; ++i) { \
+      if(i>1) { printf "%s", OFS; } \
+      if (! (i in none) ) \
+        printf "%s", orig_nms[ix[out[i]]]; \
+      else
+        printf "%s_NOTFOUND", out[i]; \
+    } \
+    print "" \
+  } \
+} \
+NR>1 { \
+  if(n>0) { \
+    for (i=1; i<=n; i++) { \
+      if(i>1) { printf "%s", OFS; } \
+      if (! (i in none) ) \
+        printf "%s", $ix[out[i]]; \
+      else
+        printf "%s", "NOTFOUND"; \
+    } \
+    print "" \
+  } \
+}' $filenm
+
+exit_good

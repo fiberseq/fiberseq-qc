@@ -1,0 +1,110 @@
+#!/bin/tcsh -ef
+# author : sjn
+# date : May.2023
+
+if ( $#argv != 3 ) then
+  printf "%s\n" $0:t
+  printf "  <base-output-dir>\n"
+  printf "  <sample-name>\n"
+  printf "  <sample-name.fiberseq.all.tbl.gz\n"
+  exit -1
+endif
+
+set echo
+
+set baseoutd = $1
+set samplenm = $2
+set tableinp = $3 # <samplenm>.fiberseq.all.tbl.gz
+
+mkdir -p $baseoutd
+
+# qc_msp
+($0:h/details/make-plot-msp-lengths.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_msp_lengths.pdf \
+  $baseoutd/$samplenm.qc_msp_lengths.intermediate.stat.txt) &
+
+set statsfs = ($baseoutd/$samplenm.qc_msp_lengths.intermediate.stat.txt)
+set pdfs = ($baseoutd/$samplenm.qc_msp_lengths.pdf)
+
+# qc_nuc
+($0:h/details/make-plot-nuc-lengths.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_nuc_lengths.pdf \
+  $baseoutd/$samplenm.qc_nuc.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_nuc.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_nuc_lengths.pdf)
+
+# qc_m6a
+($0:h/details/make-plot-number-m6a-per-read.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_m6a_per_read.pdf \
+  $baseoutd/$samplenm.qc_ccs_passes.pdf \
+  $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt) # must duplicate
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_m6a_per_read.pdf $baseoutd/$samplenm.qc_ccs_passes.pdf)
+
+# qc_nucs_per_read
+($0:h/details/make-plot-number-nucs-per-read.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_number_nucs_per_read.pdf \
+  $baseoutd/$samplenm.qc_number_nucs_per_read.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_number_nucs_per_read.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_number_nucs_per_read.pdf)
+
+# qc_readlength_per_nuc
+($0:h/details/make-plot-readlength-per-nuc.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_readlength_per_nuc.pdf \
+  $baseoutd/$samplenm.qc_readlength_per_nuc.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlength_per_nuc.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlength_per_nuc.pdf)
+
+# qc_readlengths
+($0:h/details/make-plot-readlengths.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_readlengths.pdf \
+  $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlengths.pdf)
+
+# qc_rq
+($0:h/details/make-plot-rq.sh \
+  $samplenm \
+  $tableinp \
+  $baseoutd/$samplenm.qc_readquality.pdf \
+  $baseoutd/$samplenm.qc_readquality.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_readquality.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_readquality.pdf)
+
+wait
+
+# qc_combine_stats
+cat $statsfs \
+ >! $baseoutd/$samplenm.qc_stats.txt
+
+# create html outputs
+set fs = ($pdfs $statsfs)
+details/make-html.tcsh \
+  $samplenm \
+  $baseoutd/$samplenm.overview.html \
+  $baseoutd/$samplenm.qc.html \
+  $fs
+
+foreach s ($statsfs)
+  rm -f $s
+end
+
+exit 0
