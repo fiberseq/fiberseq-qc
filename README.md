@@ -14,7 +14,7 @@ ImageMagick's convert utility.<br/>
 <hr/>
 <h4>Output</h4>
 The main output is a page that ends in overview.html that you can open in your browser.<br/>
-On the left side is a series of pertinent histogram images with statics.<br/>
+On the left side is a series of pertinent histogram images with statistics.<br/>
 On the right side is a blow-up of any image that you mouse over on the left.<br/>
 <br/><br/>
 <img src="./share/ss-full.png">
