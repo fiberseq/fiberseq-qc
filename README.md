@@ -9,7 +9,7 @@ ImageMagick's convert utility.<br/>
 <hr/>
 <h4>Example Run</h4>
 <code>runall-qc.tcsh my-output-dir PS00246 fiberseq.all.tbl.gz</code>
-<br/><br/>where fiberseq.all.tbl.gz was produced using the fiberseq-smk pipeline<br/>
+<br/><br/>where fiberseq.all.tbl.gz was produced using either the fiberseq-smk or fibertools-rs pipeline<br/>
 
 <hr/>
 <h4>Output</h4>
