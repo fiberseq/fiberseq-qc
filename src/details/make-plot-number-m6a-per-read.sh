@@ -28,6 +28,8 @@ fi
 rm -rf $tmpd
 mkdir -p $tmpd
 mkdir -p $(dirname "${outpdf}")
+mkdir -p $(dirname "${ec_outpdf}")
+mkdir -p $(dirname "${outstat}")
 
 BASEDIR=$(dirname "$0")
 zcat $inp | ${BASEDIR}/cutnm total_m6a_bp,total_AT_bp,ec >$tmpd/$samplenm.$ftype

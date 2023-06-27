@@ -25,6 +25,7 @@ fi
 rm -rf $tmpd
 mkdir -p $tmpd
 mkdir -p $(dirname "${outpdf}")
+mkdir -p $(dirname "${outstat}")
 
 BASEDIR=$(dirname "$0")
 zcat $inp |

@@ -1,0 +1,24 @@
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base
+  - r-scales
+  - r-tidyverse
+  - r-tidylog
+  - r-cowplot
+  - r-data.table
+  - r-ggrepel
+  - r-ggforce
+  - r-ggridges
+  - r-ggpubr
+  - r-ggnewscale
+  - r-ggside
+  - r-splitstackshape
+  - r-patchwork
+  - bioconda::bioconductor-iranges
+  - samtools
+  - imagemagick
+  - fibertools-rs
+

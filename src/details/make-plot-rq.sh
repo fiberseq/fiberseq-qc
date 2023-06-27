@@ -20,6 +20,7 @@ tmpd=${TMPDIR}/$(whoami)/$$
 rm -rf $tmpd
 mkdir -p $tmpd
 mkdir -p $(dirname "${outpdf}")
+mkdir -p $(dirname "${outstat}")
 
 if [ ! -s $inp ]; then
     printf "Problem finding 1 file: %s\n"

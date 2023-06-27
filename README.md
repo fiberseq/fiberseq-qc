@@ -3,8 +3,11 @@ QC plots and statistics
 
 <hr/>
 <h4>External Software Requirements</h4>
-R and its scales library.<br/>
-ImageMagick's convert utility.<br/>
+# install external dependencies using:<br/>
+<code>conda create -n fiberseq-qc</code>
+<code>mamba env update -n fiberseq-qc --file env/qc.yaml<code/>
+Then, activate your environment<br/>
+<code>conda activate fiberseq-qc</code>
 
 <hr/>
 <h4>Example Run</h4>

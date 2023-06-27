@@ -28,6 +28,7 @@ tmpd=${TMPDIR}/$(whoami)/$$
 rm -rf $tmpd
 mkdir -p $tmpd
 mkdir -p $(dirname "${outpdf}")
+mkdir -p $(dirname "${outstat}")
 
 # in some fiberseq-smk runs, there are 'nucleosomes' of size 1 that are the first and last listed always.  I am throwing out size=1 nucleosomes.
 BASEDIR=$(dirname "$0")

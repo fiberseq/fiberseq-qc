@@ -24,6 +24,8 @@ fi
 
 rm -rf $tmpd
 mkdir -p $tmpd
+mkdir -p $(dirname "${outpdf}")
+mkdir -p $(dirname "${outstat}")
 
 # putting things in bins of size 10
 BASEDIR=$(dirname "$0")
