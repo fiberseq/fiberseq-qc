@@ -4,15 +4,15 @@ QC plots and statistics
 <hr/>
 <h4>External Software Requirements</h4>
 # install external dependencies using:<br/>
-<code>conda create -n fiberseq-qc</code>
-<code>mamba env update -n fiberseq-qc --file env/qc.yaml<code/>
+<code>conda create -n fiberseq-qc</code><br/>
+<code>mamba env update -n fiberseq-qc --file env/qc.yaml</code><br/><br/>
 Then, activate your environment<br/>
 <code>conda activate fiberseq-qc</code>
 
 <hr/>
 <h4>Example Run</h4>
-<code>runall-qc.tcsh my-output-dir PS00246 fiberseq.all.tbl.gz</code>
-<br/><br/>where fiberseq.all.tbl.gz was produced using either the fiberseq-smk or fibertools-rs pipeline<br/>
+<code>runall-qc.tcsh my-output-dir PS00246 fiberseq.bam fiberseq.all.tbl.gz</code>
+<br/><br/>where fiberseq.bam and fiberseq.all.tbl.gz were produced using the fiberseq-smk or fibertools-rs pipeline<br/>
 
 <hr/>
 <h4>Output</h4>
