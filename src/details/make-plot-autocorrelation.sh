@@ -205,7 +205,7 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat"
   cat("# Note: ***Autocorrelation stats***\n", file=stats_file, append=FALSE)
-  cat(paste("X[X==0]=", paste(xcross, collapse=","), "\n", sep=""), file=stats_file, append=TRUE)
+  cat(paste("X[Y==0]=", paste(xcross, collapse=","), "\n", sep=""), file=stats_file, append=TRUE)
 
   pdf("$outpdf")
   tdf %>%
