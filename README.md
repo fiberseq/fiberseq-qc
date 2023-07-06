@@ -3,6 +3,8 @@ QC plots and statistics
 
 <hr/>
 <h4>Software Setup</h4>
+# download the software:<br/>
+<code>git clone https://github.com/fiberseq/fiberseq-qc.git</code><br/><br/>
 # install external dependencies using:<br/>
 <code>conda create -n fiberseq-qc</code><br/>
 <code>mamba env update -n fiberseq-qc --file env/qc.yaml</code><br/><br/>
@@ -11,7 +13,7 @@ Then, activate your environment<br/>
 
 <hr/>
 <h4>Example Run</h4>
-<code>runall-qc.tcsh my-output-dir PS00246 fiberseq.bam fiberseq.all.tbl.gz</code>
+<code>src/runall-qc.tcsh my-output-dir PS00246 fiberseq.bam fiberseq.all.tbl.gz</code>
 <br/><br/>where fiberseq.bam and fiberseq.all.tbl.gz were produced using the fiberseq-smk or fibertools-rs pipeline<br/>
 
 <hr/>
