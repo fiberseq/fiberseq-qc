@@ -112,7 +112,7 @@ cat $statsfs \
 
 # create html outputs
 set fs = ($pdfs $statsfs)
-details/make-html.tcsh \
+$0:h/details/make-html.tcsh \
   $samplenm \
   $baseoutd/$samplenm.overview.html \
   $baseoutd/$samplenm.qc.html \
