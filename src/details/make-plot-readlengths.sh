@@ -106,6 +106,17 @@ R --no-save --quiet <<__R__
 
   axis(1, seq(0, mxh, 4000), labels=paste(seq(0, 50, 4), "k", sep=""))
   axis(2)
+  gg <- c("Quantile10%", "Median", "Quantile90%")
+  gg <- format(gg, justify="left")
+  nnum <- prettyNum(c(reads_10, reads_50, reads_90), big.mark=",", scientific=FALSE)
+  nnum <- format(nnum, justify="right")
+  nnum <- paste(gg, nnum)
+
+  par(cex=0.8)
+  legend("topright",
+         legend=nnum,
+         box.lty=0,
+        )
 
   dev.off()
 
