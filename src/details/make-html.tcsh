@@ -1,4 +1,4 @@
-45#!/bin/tcsh -ef
+#!/bin/tcsh -ef
 # author : sjn
 # date : Fri Sep 23 12:29:05 PDT 2022
 
