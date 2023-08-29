@@ -1,4 +1,4 @@
-#!/bin/tcsh -ef
+45#!/bin/tcsh -ef
 # author : sjn
 # date : Fri Sep 23 12:29:05 PDT 2022
 
@@ -80,8 +80,8 @@ cat <<__HTML__ >! $overview
   </head>
   <body>
     <div class="container">
-      <iframe id="TNAILS" src="$html:t" frameborder="0" scrolling="yes" style="height: 100%; width: 49%; float: left;" align="left"></iframe>
-      <iframe id="FULLIMG" src="$pdf:t" frameborder="0" scrolling="yes" style="overflow: hidden; height: 100%; width:49%;" align="right"></iframe>
+      <iframe id="TNAILS" src="$html:t" frameborder="0" scrolling="yes" style="height: 100%; width: 45%; float: left;" align="left"></iframe>
+      <iframe id="FULLIMG" src="$pdf:t" frameborder="0" scrolling="yes" style="overflow: hidden; height: 100%; width:55%;" align="right"></iframe>
       <script>
         window.onmessage = function(msg) {
           const img = document.getElementById("FULLIMG")

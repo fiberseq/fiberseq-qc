@@ -8,8 +8,8 @@
 set -exuo pipefail
 
 if [[ $# != 5 ]]; then
-    printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
-    exit 1
+  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
+  exit 1
 fi
 
 samplenm=$1
@@ -85,7 +85,7 @@ R --no-save --quiet <<__R__
   pv2 <- round(100 * length(p[p<0.2])/length(p), 1)
   stats_file <- "$outstat"
   cat("# Note: ***#m6A/#ATs stats***\n", file=stats_file, sep="", append=FALSE)
-  cat("# Note: #m6A/#ATs filtered to reads with CCS Coverage > 0\n", file=stats_file, sep="", append=TRUE)
+  cat("# Note: #m6A/#ATs filtered to reads with Coverage > 0\n", file=stats_file, sep="", append=TRUE)
   cat("Proportion(#m6A/#ATs)<0.01=", pv1, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Proportion(#m6A/#ATs)<0.2=", pv2, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(#m6A/#ATs)=", mp, "\n", file=stats_file, sep="", append=TRUE)

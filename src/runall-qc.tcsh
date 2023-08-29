@@ -107,6 +107,16 @@ set pdfs = ($pdfs $baseoutd/$samplenm.qc_readquality.pdf)
 set statsfs = ($statsfs $baseoutd/$samplenm.qc_autocorrelation.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_autocorrelation.pdf)
 
+# qc_randfibers
+($src_dir/details/make-plot-rand-fibers.sh \
+  $samplenm \
+  $baminp \
+  $baseoutd/$samplenm.qc_randfibers.pdf \
+  $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.pdf)
+
 wait
 
 # qc_combine_stats

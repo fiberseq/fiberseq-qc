@@ -5,8 +5,8 @@
 set -exuo pipefail
 
 if [[ $# != 4 ]]; then
-    printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
-    exit 1
+  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
+  exit 1
 fi
 
 samplenm=$1
@@ -30,6 +30,7 @@ nreads=5000
   > $tmpd/$samplenm.$ftype)
 
 R --no-save --quiet <<__R__
+  library(ggplot2)
   library(tidyverse)
   library(data.table)
   library(scales)

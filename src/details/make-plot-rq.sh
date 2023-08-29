@@ -5,8 +5,8 @@
 set -euo pipefail
 
 if [[ $# != 4 ]]; then
-    printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
-    exit 1
+  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
+  exit 1
 fi
 
 samplenm=$1
