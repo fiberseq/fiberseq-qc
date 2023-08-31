@@ -23,8 +23,8 @@ mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
 if [ ! -s $inp ]; then
-    printf "Problem finding 1 file: %s\n"
-    exit 1
+  printf "Problem finding 1 file: %s\n"
+  exit 1
 fi
 
 BASEDIR=$(dirname "$0")

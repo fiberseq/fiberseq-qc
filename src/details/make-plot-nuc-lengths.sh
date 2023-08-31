@@ -19,8 +19,8 @@ outpdf=$3
 outstat=$4
 
 if [ ! -s $inp ]; then
-    printf "Problem finding 1 file: %s\n" $inp
-    exit 1
+  printf "Problem finding 1 file: %s\n" $inp
+  exit 1
 fi
 
 ftype=nuc

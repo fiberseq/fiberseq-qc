@@ -18,8 +18,8 @@ ftype=readlengths
 tmpd=${TMPDIR}/$(whoami)/$$
 
 if [ ! -s $inp ]; then
-    printf "Problem finding 1 file: %s\n" $inp
-    exit 1
+  printf "Problem finding 1 file: %s\n" $inp
+  exit 1
 fi
 
 rm -rf $tmpd

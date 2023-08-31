@@ -1,8 +1,8 @@
 #!/bin/bash -efx
 # author : sjn
-# date : Aug 22, 2022
+# date : Aug 2023
 
-# histogram of per read #nucleosomes
+# histogram of per read #cpgs
 # add a line and values for the median, 10%ile and 90%ile
 
 set -euo pipefail
@@ -17,7 +17,7 @@ inp=$2
 outpdf=$3
 outstat=$4
 
-ftype=nuc
+ftype=cpg
 tmpd=${TMPDIR}/$(whoami)/$$
 if [ ! -s $inp ]; then
   printf "Problem finding 1 file: %s\n" $inp
@@ -31,13 +31,9 @@ mkdir -p $(dirname "${outstat}")
 
 BASEDIR=$(dirname "$0")
 zcat $inp |
-    ${BASEDIR}/cutnm nuc_lengths |
+    ${BASEDIR}/cutnm total_5mC_bp |
     awk 'NR > 1' |
-    awk '$1 != "."' |
-    rev |
-    sed 's;,;;' |
-    rev |
-    awk '{ print split($1, a, ",") }' |
+    awk '{ if ($1 == ".") {$1=0} print; }' |
     sort -gk1,1 |
     uniq -c |
     awk '{ print $2"\t"$1 }' \
@@ -63,38 +59,39 @@ R --no-save --quiet <<__R__
   }
 
   s <- read.table("$tmpd/$samplenm.$ftype", header=FALSE, sep="\t", row.names=NULL)
-  mxh <- 150
-
-  f <- subset(s, V1>mxh)
-  g <- subset(s, V1<mxh)
-  h <- subset(s, V1==mxh)
-  h[,2] <- h[,2] + sum(f[,2])
-  p <- round(100*sum(f[,2])/sum(s[,2]), 2)
-  s <- rbind(g, h)
-  mxc <- max(s[,2])
-
+  mxh <- 1000000
   scores_10 <- fast_kth(s, 0, mxh, 0.1)
   scores_50 <- fast_kth(s, 0, mxh, 0.5)
   scores_90 <- fast_kth(s, 0, mxh, 0.9)
 
+  mxx <- 250
+  f <- subset(s, V1>mxx)
+  g <- subset(s, V1<mxx)
+  h <- subset(s, V1==mxx)
+  h[,2] <- h[,2] + sum(f[,2])
+  pl <- round(100*sum(f[,2])/sum(s[,2]),1)
+  s <- rbind(g, h)
+  mxy <- max(s[,2])
+cat("mxy=", mxy, "\n")
+
   mycol <- "darkgreen"
   pdf("$outpdf")
-  plot(s, axes=F, xlim=c(0,mxh), type="h", main="$samplenm", xlab="# nucleosomes per read", ylab="Count")
+  pp <- plot(s, axes=F, xlim=c(0,mxx), type="h", main="$samplenm", xlab="# CpGs per read", ylab="Count")
   abline(v=scores_10, col=mycol, lty=1)
   abline(v=scores_50, col=mycol, lty=1)
   abline(v=scores_90, col=mycol, lty=1)
 
-  rtoff <- 4
-  div <- 2
-  msg1 <- paste(p, "% > ", mxh, sep="")
+  rtoff <- 10
+  div <- 4
+  msg1 <- paste(pl, "% > ", mxx, "bp", sep="")
   msg2 <- paste(scores_10)
   msg3 <- paste(scores_50)
   msg4 <- paste(scores_90)
 
-  text(mxh-20, mxc/div, msg1, col=mycol)
-  text(scores_10-rtoff, mxc, msg2, col=mycol)
-  text(scores_50+rtoff, mxc, msg3, col=mycol)
-  text(scores_90+rtoff, mxc, msg4, col=mycol)
+  text(mxx-20, mxy/div, msg1, col=mycol)
+  text(scores_10-rtoff, mxy, msg2, col=mycol)
+  text(scores_50+rtoff, mxy, msg3, col=mycol)
+  text(scores_90+rtoff, mxy, msg4, col=mycol)
 
   axis(1)
   axis(2)
@@ -102,11 +99,10 @@ R --no-save --quiet <<__R__
   dev.off()
 
   stats_file <- "$outstat"
-  cat("# Note: ***per read number of nucleosomes***\n", file=stats_file, append=FALSE)
-  cat("Percent(NucsPerRead)", ">", mxh, "=", p, "%\n", file=stats_file, sep="", append=TRUE)
-  cat("Quantile10%(NucsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
-  cat("Median(NucsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
-  cat("Quantile90%(NucsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
+  cat("# Note: ***per read number of 5mCs***\n", file=stats_file, append=FALSE)
+  cat("Quantile10%(5mCsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Median(5mCsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Quantile90%(5mCsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
 rm -rf $tmpd

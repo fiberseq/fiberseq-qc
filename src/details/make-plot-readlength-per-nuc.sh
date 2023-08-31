@@ -24,12 +24,12 @@ ftype=readlength.div.number.nucleosomes
 tmpd=${TMPDIR}/$(whoami)/$$
 
 if [[ ! -s $inp ]]; then
-    printf "Problem finding 1 file: %s\n" $inp
-    exit 1
+  printf "Problem finding 1 file: %s\n" $inp
+  exit 1
 fi
 
 if [[ -s $tmpd ]]; then
-    rm -rf $tmpd
+  rm -rf $tmpd
 fi
 mkdir -p $tmpd
 mkdir -p $(dirname "${outpdf}")

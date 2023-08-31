@@ -43,7 +43,7 @@ cat ${tmpd}/sample.bam \
           split($NF, fnm, "/"); \
           $NF=fnm[2]; \
           for(i=1;i<n_m6a;++i) { print $NF, "m6a", m6a[i], m6a[i]+1; } \
-          for(i=1;i<n_cpg;++i) { print $NF, "5mc", cpg[i], cpg[i]+1; } \
+          #for(i=1;i<n_cpg;++i) { print $NF, "5mc", cpg[i], cpg[i]+1; } \
           for(i=1;i<n_msp;++i) { print $NF, "msp", msp[i], msp[i]+lmsp[i]; } \
           for(i=1;i<n_nuc;++i) { print $NF, "nuc", nuc[i], nuc[i]+lnuc[i]; } \
           print $NF, "xfiber-end", f_length, f_length+10; \
@@ -59,7 +59,11 @@ R --no-save --quiet <<__R__
   library(ggpubr)
 
   df <- read.table("${tmpd}/${ftype}.samples", header=TRUE, row.names=NULL, sep="\t")
-  custom_colors <- scale_fill_manual(name="Feature", values = brewer.pal(5, "Spectral"))
+  col_msp <- "#FF00FF"  # 255,0,255
+  col_nuc <- "#A9A9A9"  # 169,169,169
+  col_m6a <- "#800080"  # 128,128,128
+  col_end <- "#0000FF"  # 0,0,255
+  custom_colors <- scale_fill_manual(name="Feature", values=c(col_m6a, col_msp, col_nuc, col_end))
 
   stats_file <- "${outstat}"
   cat("# Note: ***Random fiber stats***\n", file=stats_file, append=FALSE)
@@ -68,7 +72,6 @@ R --no-save --quiet <<__R__
   df <- df %>% 
     mutate(
       y=case_when(
-        Feature=="5mc" ~ 1.25,
         Feature=="m6a" ~ 1,
         Feature=="msp" ~ 0.5,
         Feature=="nuc" ~ 0.25,
@@ -85,7 +88,8 @@ R --no-save --quiet <<__R__
         xmin=Start, xmax=End,
         color=NULL,
         fill=Feature,
-        ymin=-y, ymax=y
+        ymin=-y, ymax=y,
+        xmin=0, xmax=15000
       ),
     ) +
     facet_col(~Fiber, scales="free_y", strip.position="left") + 
