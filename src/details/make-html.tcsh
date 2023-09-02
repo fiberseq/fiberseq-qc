@@ -44,7 +44,7 @@ __HTML__
 @ cntr = 1
 foreach pdf ($pdfs)
   convert $pdf $pdf:r.png
-  set nm = `echo $pdf:t:r | sed 's;qc_;;g'`
+  set nm = `echo $pdf:t:r | cut -f2- -d'.' | sed 's;qc_;;g'`
   printf '      <tr>' >>! $html
   printf '        <th>'$nm'</th>' >>! $html
   printf '        <td style="text-align: center;"><img src="'$pdf:t:r.png'" alt="'$pdf:t'" onmouseenter="hover(this)"></img></td>' >>! $html

@@ -125,14 +125,34 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_autocorrelation.intermediate.stat
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_autocorrelation.pdf)
 
 # qc_randfibers
+set maxz = 20000
 ($src_dir/details/make-plot-rand-fibers.sh \
   $samplenm \
   $baminp \
+  0 \
+  $maxz \
   $baseoutd/$samplenm.qc_randfibers.pdf \
   $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt) &
 
 set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.pdf)
+
+# zoomed qc_randfibers
+set lastz = 0
+set zooms = (`seq 5000 5000 $maxz`)
+foreach z ($zooms)
+  ($src_dir/details/make-plot-rand-fibers.sh \
+    $samplenm \
+    $baminp \
+    $lastz \
+    $z \
+    $baseoutd/$samplenm.qc_randfibers.$lastz.$z.pdf \
+    $baseoutd/$samplenm.qc_randfibers.$lastz.$z.intermediate.stat.txt) &
+
+  set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.$lastz.$z.intermediate.stat.txt)
+  set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.$lastz.$z.pdf)
+  set lastz = $z
+end
 
 wait
 

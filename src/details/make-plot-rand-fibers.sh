@@ -4,17 +4,19 @@
 
 set -exuo pipefail
 
-if [[ $# != 4 ]]; then
-  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
+if [[ $# != 6 ]]; then
+  printf "Expect $0 <sample-name> <input-file> <xmin> <xmax> <output-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
 samplenm=$1
 inp=$2 # fiberseq.bam
-outpdf=$3
-outstat=$4
+xmn=$3 # for pdf output
+xmx=$4 # for pdf output
+outpdf=$5
+outstat=$6
 
-ftype=nucs.sample
+ftype=fibers.sample
 tmpd=${TMPDIR}/$(whoami)/$$
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
@@ -48,6 +50,8 @@ cat ${tmpd}/sample.bam \
           for(i=1;i<n_nuc;++i) { print $NF, "nuc", nuc[i], nuc[i]+lnuc[i]; } \
           print $NF, "xfiber-end", f_length, f_length+10; \
         }' \
+  | awk -v xmn=${xmn} -v xmx=${xmx} \
+      '(NR == 1 ||  ($3>=xmn && $4<=xmx))' \
   > ${tmpd}/${ftype}.samples
 
 R --no-save --quiet <<__R__
@@ -89,19 +93,17 @@ R --no-save --quiet <<__R__
         color=NULL,
         fill=Feature,
         ymin=-y, ymax=y,
-        xmin=0, xmax=15000
       ),
     ) +
     facet_col(~Fiber, scales="free_y", strip.position="left") + 
     geom_rect(alpha=1) +
-    geom_vline(xintercept=seq(0, max(df[["End"]]), 5000), color="white") +
+#    geom_vline(xintercept=seq(0, max(df[["End"]]), 5000), color="white") +
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
     theme(axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
     theme(legend.position="top") +
     custom_colors
 
   dev.off()
-  #ggsave("${outpdf}", height=1+length(unique(df[["Fiber"]])), width=15, limitsize=FALSE)
 __R__
 
 rm -rf ${tmpd}
