@@ -29,7 +29,7 @@ cat <<__HTML__ >! $html
         border: 1px solid #ddd;
         border-radius: 4px;
         padding: 5px;
-        width: 150px;
+        height: 150px;
       }
       img:hover {
         box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
@@ -43,7 +43,9 @@ __HTML__
 
 @ cntr = 1
 foreach pdf ($pdfs)
-  convert $pdf $pdf:r.png
+  if ( ! -s $pdf:r.png ) then
+    convert $pdf $pdf:r.png
+  endif
   set nm = `echo $pdf:t:r | cut -f2- -d'.' | sed 's;qc_;;g'`
   printf '      <tr>' >>! $html
   printf '        <th>'$nm'</th>' >>! $html
@@ -80,8 +82,8 @@ cat <<__HTML__ >! $overview
   </head>
   <body>
     <div class="container">
-      <iframe id="TNAILS" src="$html:t" frameborder="0" scrolling="yes" style="height: 100%; width: 45%; float: left;" align="left"></iframe>
-      <iframe id="FULLIMG" src="$pdf:t" frameborder="0" scrolling="yes" style="overflow: hidden; height: 100%; width:55%;" align="right"></iframe>
+      <iframe id="TNAILS" src="$html:t" frameborder="0" scrolling="yes" style="height: 100%; width: 35%; float: left;" align="left"></iframe>
+      <iframe id="FULLIMG" src="$pdf:t" frameborder="0" scrolling="yes" style="overflow: hidden; height: 100%; width:65%;" align="right"></iframe>
       <script>
         window.onmessage = function(msg) {
           const img = document.getElementById("FULLIMG")

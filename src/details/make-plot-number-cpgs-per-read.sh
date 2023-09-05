@@ -8,7 +8,7 @@
 set -euo pipefail
 
 if [ $# != 4 ]; then
-  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
+  printf "Expect $0 <sample-name> <input-table> <output-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
@@ -17,27 +17,26 @@ inp=$2
 outpdf=$3
 outstat=$4
 
-ftype=cpg
-tmpd=${TMPDIR}/$(whoami)/$$
-if [ ! -s $inp ]; then
-  printf "Problem finding 1 file: %s\n" $inp
+if [ ! -s ${inp} ]; then
+  printf "Problem finding 1 file: %s\n" ${inp}
   exit 1
 fi
 
-rm -rf $tmpd
-mkdir -p $tmpd
+ftype=cpg
+tmpd=${TMPDIR}/$(whoami)/$$
+rm -rf ${tmpd}
+mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
 BASEDIR=$(dirname "$0")
-zcat $inp |
-    ${BASEDIR}/cutnm total_5mC_bp |
-    awk 'NR > 1' |
-    awk '{ if ($1 == ".") {$1=0} print; }' |
-    sort -gk1,1 |
-    uniq -c |
-    awk '{ print $2"\t"$1 }' \
-        >$tmpd/$samplenm.$ftype
+${BASEDIR}/cutnm total_5mC_bp $inp |
+  awk 'NR > 1' |
+  awk '{ if ($1 == ".") {$1=0} print; }' |
+  sort -gk1,1 |
+  uniq -c |
+  awk '{ print $2"\t"$1 }' \
+ >${tmpd}/${samplenm}.${ftype}
 
 R --no-save --quiet <<__R__
   # 0.0 <= quantile <= 1.0
@@ -72,7 +71,6 @@ R --no-save --quiet <<__R__
   pl <- round(100*sum(f[,2])/sum(s[,2]),1)
   s <- rbind(g, h)
   mxy <- max(s[,2])
-cat("mxy=", mxy, "\n")
 
   mycol <- "darkgreen"
   pdf("$outpdf")
@@ -105,6 +103,6 @@ cat("mxy=", mxy, "\n")
   cat("Quantile90%(5mCsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
-rm -rf $tmpd
+rm -rf ${tmpd}
 
 exit 0

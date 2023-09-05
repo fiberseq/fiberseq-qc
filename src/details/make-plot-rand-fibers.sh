@@ -16,6 +16,11 @@ xmx=$4 # for pdf output
 outpdf=$5
 outstat=$6
 
+if [ ! -s ${inp} ]; then
+  printf "Problem finding 1 file: %s\n" ${inp}
+  exit 1
+fi
+
 ftype=fibers.sample
 tmpd=${TMPDIR}/$(whoami)/$$
 rm -rf ${tmpd}
@@ -84,6 +89,10 @@ R --no-save --quiet <<__R__
       ),
     )
 
+  xint <- seq(min(df[["Start"]]), max(df[["End"]]), 1000)
+  if ( max(df[["End"]]) - min(df[["Start"]]) > 7500 ) {
+    xint <- seq(min(df[["Start"]]), max(df[["End"]]), 5000)
+  }
   pdf("${outpdf}", height=1+length(unique(df[["Fiber"]])), width=15)
 
   df %>%
@@ -97,7 +106,7 @@ R --no-save --quiet <<__R__
     ) +
     facet_col(~Fiber, scales="free_y", strip.position="left") + 
     geom_rect(alpha=1) +
-#    geom_vline(xintercept=seq(0, max(df[["End"]]), 5000), color="white") +
+    geom_vline(xintercept=xint, color="white") +
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
     theme(axis.text.y=element_blank(), axis.ticks.y=element_blank()) +
     theme(legend.position="top") +

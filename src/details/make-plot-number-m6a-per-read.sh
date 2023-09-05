@@ -8,7 +8,7 @@
 set -exuo pipefail
 
 if [[ $# != 5 ]]; then
-  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
+  printf "Expect $0 <sample-name> <input-table> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
@@ -18,21 +18,21 @@ outpdf=$3
 ec_outpdf=$4
 outstat=$5
 
-ftype=m6a
-tmpd=${TMPDIR}/$(whoami)/$$
-if [[ ! -s $inp ]]; then
-  printf "Problem finding 1 file: %s\n" $inp
+if [[ ! -s ${inp} ]]; then
+  printf "Problem finding 1 file: %s\n" ${inp}
   exit 1
 fi
 
-rm -rf $tmpd
-mkdir -p $tmpd
+ftype=m6a
+tmpd=${TMPDIR}/$(whoami)/$$
+rm -rf ${tmpd}
+mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${ec_outpdf}")
 mkdir -p $(dirname "${outstat}")
 
 BASEDIR=$(dirname "$0")
-zcat $inp | ${BASEDIR}/cutnm total_m6a_bp,total_AT_bp,ec >$tmpd/$samplenm.$ftype
+${BASEDIR}/cutnm total_m6a_bp,total_AT_bp,ec ${inp} >${tmpd}/${samplenm}.${ftype}
 
 R --no-save --quiet <<__R__
   maxx <- 0.30
@@ -93,6 +93,6 @@ R --no-save --quiet <<__R__
   cat("Median(EQ)", "=", round(mc,3), "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
-rm -rf $tmpd
+rm -rf ${tmpd}
 
 exit 0

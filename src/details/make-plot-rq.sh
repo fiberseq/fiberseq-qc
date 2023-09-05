@@ -5,7 +5,7 @@
 set -euo pipefail
 
 if [[ $# != 4 ]]; then
-  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
+  printf "Expect $0 <sample-name> <input-table> <output-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
@@ -14,24 +14,22 @@ inp=$2
 outpdf=$3
 outstat=$4
 
-ftype=rq
-tmpd=${TMPDIR}/$(whoami)/$$
-
-rm -rf $tmpd
-mkdir -p $tmpd
-mkdir -p $(dirname "${outpdf}")
-mkdir -p $(dirname "${outstat}")
-
-if [ ! -s $inp ]; then
+if [ ! -s ${inp} ]; then
   printf "Problem finding 1 file: %s\n"
   exit 1
 fi
 
+ftype=rq
+tmpd=${TMPDIR}/$(whoami)/$$
+rm -rf ${tmpd}
+mkdir -p ${tmpd}
+mkdir -p $(dirname "${outpdf}")
+mkdir -p $(dirname "${outstat}")
+
 BASEDIR=$(dirname "$0")
-zcat $inp |
-    ${BASEDIR}/cutnm rq |
-    awk '(NR>1)' \
-        >$tmpd/$samplenm.$ftype
+${BASEDIR}/cutnm rq ${inp} |
+  awk '(NR>1)' \
+ >${tmpd}/${samplenm}.${ftype}
 
 R --no-save --quiet <<__R__
   # 0.0 <= quantile <= 1.0
@@ -85,6 +83,6 @@ R --no-save --quiet <<__R__
   cat("Median(-10*log10(1-rq))=", m, "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
-rm -rf $tmpd
+rm -rf ${tmpd}
 
 exit 0

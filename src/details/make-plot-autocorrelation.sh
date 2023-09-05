@@ -14,6 +14,11 @@ inp=$2 # fiberseq.bam
 outpdf=$3
 outstat=$4
 
+if [ ! -s ${inp} ]; then
+  printf "Problem finding 1 file: %s\n" ${inp}
+  exit 1
+fi
+
 ftype=m6a.autocor
 tmpd=${TMPDIR}/$(whoami)/$$
 rm -rf $tmpd
@@ -233,6 +238,6 @@ R --no-save --quiet <<__R__
   dev.off()
 __R__
 
-rm -rf $tmpd
+rm -rf ${tmpd}
 
 exit 0

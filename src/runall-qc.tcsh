@@ -20,9 +20,8 @@ set tmpd = $TMPDIR/`whoami`/$$
 rm -rf $tmpd
 mkdir -p $tmpd
 
-set table = $tmpd/$samplenm.fiberseq.all.tbl.gz
+set table = $tmpd/$samplenm.fiberseq.all.tbl
 ft extract -t 8 $baminp --all - \
-  | bgzip -@ 8 \
  >! $table
 
 mkdir -p $baseoutd
@@ -141,16 +140,18 @@ set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.pdf)
 set lastz = 0
 set zooms = (`seq 5000 5000 $maxz`)
 foreach z ($zooms)
+  set znm = `echo $z | numfmt --to-unit=1000 --suffix=K`
+  set lastznm = `echo $lastz | numfmt --to-unit=1000 --suffix=K`
   ($src_dir/details/make-plot-rand-fibers.sh \
     $samplenm \
     $baminp \
     $lastz \
     $z \
-    $baseoutd/$samplenm.qc_randfibers.$lastz.$z.pdf \
-    $baseoutd/$samplenm.qc_randfibers.$lastz.$z.intermediate.stat.txt) &
+    $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.pdf \
+    $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.intermediate.stat.txt) &
 
-  set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.$lastz.$z.intermediate.stat.txt)
-  set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.$lastz.$z.pdf)
+  set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.intermediate.stat.txt)
+  set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.pdf)
   set lastz = $z
 end
 

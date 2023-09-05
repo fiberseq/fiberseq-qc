@@ -9,7 +9,7 @@
 set -euox pipefail
 
 if [[ $# != 4 ]]; then
-  printf "Expect $0 <sample-name> <input-file> <output-pdf> <output-stat.txt>\n"
+  printf "Expect $0 <sample-name> <input-table> <output-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
@@ -18,39 +18,38 @@ inp=$2
 outpdf=$3
 outstat=$4
 
-if [ ! -s $inp ]; then
-  printf "Problem finding 1 file: %s\n" $inp
+if [ ! -s ${inp} ]; then
+  printf "Problem finding 1 file: %s\n" ${inp}
   exit 1
 fi
 
 ftype=nuc
 tmpd=${TMPDIR}/$(whoami)/$$
-rm -rf $tmpd
-mkdir -p $tmpd
+rm -rf ${tmpd}
+mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
 # in some fiberseq-smk runs, there are 'nucleosomes' of size 1 that are the first and last listed always.  I am throwing out size=1 nucleosomes.
 BASEDIR=$(dirname "$0")
-zcat $inp |
-    ${BASEDIR}/cutnm nuc_lengths |
-    awk 'NR > 1' |
-    awk '$1 != "."' |
-    rev |
-    sed 's;,;;' |
-    rev |
-    awk 'BEGIN {OFS="\t"; vals[-1]=-1; delete vals[-1]} ; { \
-          lng=split($0, a, ","); \
-          for ( i=1; i<=lng; ++i ) { \
-            if ( a[i] in vals ) { vals[a[i]] += 1 } \
-            else { vals[a[i]] = 1 } \
-          } \
-        } END { \
-          for ( v in vals ) { print v, vals[v] } \
-        }' |
-    awk '$1 > 1' |
-    sort -gk1,1 \
-        >$tmpd/$samplenm.$ftype
+${BASEDIR}/cutnm nuc_lengths ${inp} |
+  awk 'NR > 1' |
+  awk '$1 != "."' |
+  rev |
+  sed 's;,;;' |
+  rev |
+  awk 'BEGIN {OFS="\t"; vals[-1]=-1; delete vals[-1]} ; { \
+        lng=split($0, a, ","); \
+        for ( i=1; i<=lng; ++i ) { \
+          if ( a[i] in vals ) { vals[a[i]] += 1 } \
+          else { vals[a[i]] = 1 } \
+        } \
+      } END { \
+        for ( v in vals ) { print v, vals[v] } \
+      }' |
+  awk '$1 > 1' |
+  sort -gk1,1 \
+ >${tmpd}/${samplenm}.${ftype}
 
 R --no-save --quiet <<__R__
   library(scales)
@@ -152,6 +151,6 @@ R --no-save --quiet <<__R__
   dev.off()
 __R__
 
-rm -rf $tmpd
+rm -rf ${tmpd}
 
 exit 0
