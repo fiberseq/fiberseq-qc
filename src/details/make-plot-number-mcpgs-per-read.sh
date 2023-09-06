@@ -75,12 +75,12 @@ R --no-save --quiet <<__R__
 
   mycol <- "darkgreen"
   pdf("$outpdf")
-  pp <- plot(s, axes=F, xlim=c(0,mxx), type="h", main="$samplenm", xlab="# mCpGs per read", ylab="Count")
+  pp <- plot(s, axes=F, xlim=c(0,mxx), type="h", main="$samplenm", xlab="# mCpGs per KB per read", ylab="Count")
   abline(v=scores_10, col=mycol, lty=1)
   abline(v=scores_50, col=mycol, lty=1)
   abline(v=scores_90, col=mycol, lty=1)
 
-  rtoff <- 10
+  rtoff <- 1
   div <- 4
   msg1 <- paste(pl, "% > ", mxx, "bp", sep="")
   msg2 <- paste(scores_10)
@@ -98,10 +98,10 @@ R --no-save --quiet <<__R__
   dev.off()
 
   stats_file <- "$outstat"
-  cat("# Note: ***per read number of mCpGs***\n", file=stats_file, append=FALSE)
-  cat("Quantile10%(mCpGsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
-  cat("Median(mCpGsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
-  cat("Quantile90%(mCpGsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
+  cat("# Note: ***number of mCpGs per kb***\n", file=stats_file, append=FALSE)
+  cat("Quantile10%(mCpGsPerKB)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Median(mCpGsPerKB)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Quantile90%(mCpGsPerKB)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
 rm -rf ${tmpd}
