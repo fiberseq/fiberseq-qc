@@ -2,7 +2,7 @@
 # author : sjn
 # date : Aug 2023
 
-# histogram of per read #cpgs
+# histogram of per read #mCpGs
 # add a line and values for the median, 10%ile and 90%ile
 
 set -euo pipefail
@@ -22,17 +22,18 @@ if [ ! -s ${inp} ]; then
   exit 1
 fi
 
-ftype=cpg
+ftype=mcpg
 tmpd=${TMPDIR}/$(whoami)/$$
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
+# number of mCpGs per kb for every read
 BASEDIR=$(dirname "$0")
-${BASEDIR}/cutnm total_5mC_bp $inp |
+${BASEDIR}/cutnm total_5mC_bp,fiber_length $inp |
   awk 'NR > 1' |
-  awk '{ if ($1 == ".") {$1=0} print; }' |
+  awk 'BEGIN {OFS="\t"} ; { if ($1 == ".") {$1=0} print int($1/($2/1000.0)); }' |
   sort -gk1,1 |
   uniq -c |
   awk '{ print $2"\t"$1 }' \
@@ -63,7 +64,7 @@ R --no-save --quiet <<__R__
   scores_50 <- fast_kth(s, 0, mxh, 0.5)
   scores_90 <- fast_kth(s, 0, mxh, 0.9)
 
-  mxx <- 250
+  mxx <- 20
   f <- subset(s, V1>mxx)
   g <- subset(s, V1<mxx)
   h <- subset(s, V1==mxx)
@@ -74,7 +75,7 @@ R --no-save --quiet <<__R__
 
   mycol <- "darkgreen"
   pdf("$outpdf")
-  pp <- plot(s, axes=F, xlim=c(0,mxx), type="h", main="$samplenm", xlab="# CpGs per read", ylab="Count")
+  pp <- plot(s, axes=F, xlim=c(0,mxx), type="h", main="$samplenm", xlab="# mCpGs per read", ylab="Count")
   abline(v=scores_10, col=mycol, lty=1)
   abline(v=scores_50, col=mycol, lty=1)
   abline(v=scores_90, col=mycol, lty=1)
@@ -86,7 +87,7 @@ R --no-save --quiet <<__R__
   msg3 <- paste(scores_50)
   msg4 <- paste(scores_90)
 
-  text(mxx-20, mxy/div, msg1, col=mycol)
+  text(mxx-5, mxy/div, msg1, col=mycol)
   text(scores_10-rtoff, mxy, msg2, col=mycol)
   text(scores_50+rtoff, mxy, msg3, col=mycol)
   text(scores_90+rtoff, mxy, msg4, col=mycol)
@@ -97,10 +98,10 @@ R --no-save --quiet <<__R__
   dev.off()
 
   stats_file <- "$outstat"
-  cat("# Note: ***per read number of 5mCs***\n", file=stats_file, append=FALSE)
-  cat("Quantile10%(5mCsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
-  cat("Median(5mCsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
-  cat("Quantile90%(5mCsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
+  cat("# Note: ***per read number of mCpGs***\n", file=stats_file, append=FALSE)
+  cat("Quantile10%(mCpGsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Median(mCpGsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Quantile90%(mCpGsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
 rm -rf ${tmpd}

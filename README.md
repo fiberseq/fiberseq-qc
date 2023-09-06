@@ -14,8 +14,8 @@ Then, activate your environment<br/>
 
 <hr/>
 <h4>Example Run</h4>
-<code>src/runall-qc.tcsh my-output-dir PS00246 fiberseq.bam fiberseq.all.tbl.gz</code>
-<br/><br/>where fiberseq.bam and fiberseq.all.tbl.gz were produced using the fiberseq-smk pipeline or ft command<br/>
+<code>src/runall-qc.tcsh my-output-dir PS00246 fiberseq.ft.bam</code>
+<br/><br/>where fiberseq.ft.bam was produced using the <code>ft predict-m6a</code> command<br/>
 
 <hr/>
 <h4>Output</h4>

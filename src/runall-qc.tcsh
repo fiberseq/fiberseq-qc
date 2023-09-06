@@ -74,7 +74,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_number_nucs_per_read.intermediate
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_number_nucs_per_read.pdf)
 
 # qc_5mCs_per_read
-($src_dir/details/make-plot-number-cpgs-per-read.sh \
+($src_dir/details/make-plot-number-mcpgs-per-read.sh \
   $samplenm \
   $table \
   $baseoutd/$samplenm.qc_number_cpgs_per_read.pdf \
@@ -138,7 +138,7 @@ set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.pdf)
 
 # zoomed qc_randfibers
 set lastz = 0
-set zooms = (`seq 5000 5000 $maxz`)
+set zooms = (2000)
 foreach z ($zooms)
   set znm = `echo $z | numfmt --to-unit=1000 --suffix=K`
   set lastznm = `echo $lastz | numfmt --to-unit=1000 --suffix=K`
