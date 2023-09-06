@@ -55,9 +55,19 @@ cat ${tmpd}/sample.bam \
           for(i=1;i<n_nuc;++i) { print $NF, "nuc", nuc[i], nuc[i]+lnuc[i]; } \
           print $NF, "xfiber-end", f_length, f_length+10; \
         }' \
+  | awk -v xmx=${xmx} -v xmn=${xmn} \
+	'(NR==1 || ($3<xmx && $4>xmn))' \
   | awk -v xmn=${xmn} -v xmx=${xmx} \
-      '(NR == 1 ||  ($3>=xmn && $4<=xmx))' \
-  > ${tmpd}/${ftype}.samples
+	'BEGIN {OFS="\t"} ; { \
+          if (NR==1) { \
+            print; \
+            next; \
+          } \
+          if($4>xmx) {$4=xmx} \
+          if($3<xmn) {$3=xmn} \
+          print; \
+        }' \
+  >${tmpd}/${ftype}.samples
 
 R --no-save --quiet <<__R__
   library(ggplot2)

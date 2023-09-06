@@ -80,15 +80,15 @@ R --no-save --quiet <<__R__
   abline(v=scores_50, col=mycol, lty=1)
   abline(v=scores_90, col=mycol, lty=1)
 
-  rtoff <- 1
-  div <- 4
   msg1 <- paste(pl, "% > ", mxx, "bp", sep="")
   msg2 <- paste(scores_10)
   msg3 <- paste(scores_50)
   msg4 <- paste(scores_90)
 
+  rtoff <- 1
+  div <- 4
   text(mxx-5, mxy/div, msg1, col=mycol)
-  text(scores_10-rtoff, mxy, msg2, col=mycol)
+  text(scores_10+rtoff, mxy, msg2, col=mycol)
   text(scores_50+rtoff, mxy, msg3, col=mycol)
   text(scores_90+rtoff, mxy, msg4, col=mycol)
 

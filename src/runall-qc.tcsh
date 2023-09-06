@@ -136,9 +136,9 @@ set maxz = 20000
 set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.pdf)
 
-# zoomed qc_randfibers
-set lastz = 0
-set zooms = (2000)
+# zoomed qc_randfibers : 2k-4k to start
+set lastz = 2000
+set zooms = (4000)
 foreach z ($zooms)
   set znm = `echo $z | numfmt --to-unit=1000 --suffix=K`
   set lastznm = `echo $lastz | numfmt --to-unit=1000 --suffix=K`
