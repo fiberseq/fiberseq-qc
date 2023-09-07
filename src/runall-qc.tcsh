@@ -20,10 +20,6 @@ set tmpd = $TMPDIR/`whoami`/$$
 rm -rf $tmpd
 mkdir -p $tmpd
 
-set table = $tmpd/$samplenm.fiberseq.all.tbl
-ft extract -t 8 $baminp --all - \
- >! $table
-
 mkdir -p $baseoutd
 
 set src_dir = `readlink -f $0`
@@ -31,6 +27,12 @@ set src_dir = $src_dir:h
 
 set statsfs = ()
 set pdfs = ()
+
+# create table; cut out what is needed to save disk space
+set table = $tmpd/$samplenm.fiberseq.all.tbl
+ft extract -t 8 $baminp --all - \
+  | $src_dir/details/cutnm 5mC,ec,fiber,fiber_length,m6a,msp_lengths,msp_starts,nuc_lengths,nuc_starts,rq,total_5mC_bp,total_AT_bp,total_m6a_bp \
+ >! $table
 
 # qc_msp
 ($src_dir/details/make-plot-msp-lengths.sh \
