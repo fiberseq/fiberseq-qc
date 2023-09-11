@@ -42,10 +42,10 @@ cat ${tmpd}/sample.bam \
   | awk 'NR > 1' \
   | awk 'BEGIN {OFS="\t"; print "Fiber", "Feature", "Start", "End"} ; { \
           n_m6a=split($1, m6a, ","); \
-          n_msp=split($3, msp, ","); \
-          split($4, lmsp, ","); \
-          n_nuc=split($5, nuc, ","); \
-          split($6, lnuc, ","); \
+          n_msp=split($2, msp, ","); \
+          split($3, lmsp, ","); \
+          n_nuc=split($4, nuc, ","); \
+          split($5, lnuc, ","); \
           f_length=$(NF-1); \
           split($NF, fnm, "/"); \
           $NF=fnm[2]; \
