@@ -35,9 +35,10 @@ nreads=100
   > ${tmpd}/sample.bam)
 
 # plot end of fiber as 10 nt rectangle
+BASEDIR=$(dirname "$0")
 cat ${tmpd}/sample.bam \
   | ft extract --all - \
-  | cutnm m6a,msp_starts,msp_lengths,nuc_starts,nuc_lengths,fiber_length,fiber \
+  | ${BASEDIR}/cutnm m6a,msp_starts,msp_lengths,nuc_starts,nuc_lengths,fiber_length,fiber \
   | awk 'NR > 1' \
   | awk 'BEGIN {OFS="\t"; print "Fiber", "Feature", "Start", "End"} ; { \
           n_m6a=split($1, m6a, ","); \
