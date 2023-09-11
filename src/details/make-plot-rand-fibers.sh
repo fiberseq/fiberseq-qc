@@ -37,11 +37,10 @@ nreads=100
 # plot end of fiber as 10 nt rectangle
 cat ${tmpd}/sample.bam \
   | ft extract --all - \
-  | cutnm m6a,5mC,msp_starts,msp_lengths,nuc_starts,nuc_lengths,fiber_length,fiber \
+  | cutnm m6a,msp_starts,msp_lengths,nuc_starts,nuc_lengths,fiber_length,fiber \
   | awk 'NR > 1' \
   | awk 'BEGIN {OFS="\t"; print "Fiber", "Feature", "Start", "End"} ; { \
           n_m6a=split($1, m6a, ","); \
-          n_cpg=split($2, cpg, ","); \
           n_msp=split($3, msp, ","); \
           split($4, lmsp, ","); \
           n_nuc=split($5, nuc, ","); \
@@ -50,7 +49,6 @@ cat ${tmpd}/sample.bam \
           split($NF, fnm, "/"); \
           $NF=fnm[2]; \
           for(i=1;i<n_m6a;++i) { print $NF, "m6a", m6a[i], m6a[i]+1; } \
-          #for(i=1;i<n_cpg;++i) { print $NF, "5mc", cpg[i], cpg[i]+1; } \
           for(i=1;i<n_msp;++i) { print $NF, "msp", msp[i], msp[i]+lmsp[i]; } \
           for(i=1;i<n_nuc;++i) { print $NF, "nuc", nuc[i], nuc[i]+lnuc[i]; } \
           print $NF, "xfiber-end", f_length, f_length+10; \
