@@ -18,6 +18,9 @@ set pdfs = "$argv[4-]"
 set txts = `echo "$pdfs" | tr ' ' '\n' | grep -e ".txt"`
 set pdfs = `echo "$pdfs" | tr ' ' '\n' | grep -e ".pdf"`
 
+set sample_nm = `echo "$sample" | awk '{ split($0, a, ":"); print a[1]; }'`
+set sample_info = `echo "$sample" | awk '{ n=split($0, a, ":"); if(n>1) print a[2]; }'`
+
 cat <<__HTML__ >! $html
 <html>
   <head>
@@ -38,7 +41,7 @@ cat <<__HTML__ >! $html
   </head>
   <body>
     <table>
-    <caption><h1>QC Report: $sample</h1></caption>
+    <caption><h1>QC Report: $sample_nm</h1><h2>$sample_info</h2></caption>
 __HTML__
 
 @ cntr = 1

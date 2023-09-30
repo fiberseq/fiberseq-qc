@@ -28,6 +28,9 @@ mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
+xmn_nm=`echo $xmn | numfmt --to-unit=1000 --suffix=K`
+xmx_nm=`echo $xmx | numfmt --to-unit=1000 --suffix=K`
+
 nreads=100
 (set +eo pipefail && samtools view -h --subsample-seed 43 --subsample 0.01 $inp \
   | awk -v nrds=$nreads 'BEGIN {i=0} ; { if($1 ~ /^@/) print; else if (++i <= nrds) print; else { exit 0; } }' \
@@ -35,6 +38,8 @@ nreads=100
   > ${tmpd}/sample.bam)
 
 # plot end of fiber as 10 nt rectangle
+# pacbio 'fiber' names are of the form m84046_230715_053754_s4/240455876/ccs -> use middle value
+# nanopore 'fiber' names have not had '/' in the names so far -> use full name
 BASEDIR=$(dirname "$0")
 cat ${tmpd}/sample.bam \
   | ft extract --all - \
@@ -47,8 +52,7 @@ cat ${tmpd}/sample.bam \
           n_nuc=split($4, nuc, ","); \
           split($5, lnuc, ","); \
           f_length=$(NF-1); \
-          split($NF, fnm, "/"); \
-          $NF=fnm[2]; \
+          if(split($NF, fnm, "/")>1) { $NF=fnm[2]; } \
           for(i=1;i<n_m6a;++i) { print $NF, "m6a", m6a[i], m6a[i]+1; } \
           for(i=1;i<n_msp;++i) { print $NF, "msp", msp[i], msp[i]+lmsp[i]; } \
           for(i=1;i<n_nuc;++i) { print $NF, "nuc", nuc[i], nuc[i]+lnuc[i]; } \
@@ -85,7 +89,8 @@ R --no-save --quiet <<__R__
 
   stats_file <- "${outstat}"
   cat("# Note: ***Random fiber stats***\n", file=stats_file, append=FALSE)
-  cat("Number(Fibers)=", length(unique(df[["Fiber"]])), "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("# Note: Range ", "$xmn_nm", "-", "$xmx_nm", sep=""), "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("Number(Fibers)=", length(unique(df[["Fiber"]])), "/", "$nreads", sep=""), "\n", file=stats_file, sep="", append=TRUE)
 
   df <- df %>% 
     mutate(

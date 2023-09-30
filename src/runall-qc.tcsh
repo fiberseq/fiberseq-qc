@@ -16,6 +16,13 @@ set baseoutd = $1
 set samplenm = $2
 set baminp   = $3 # <samplenm>.fiberseq.bam with corresponding bai file
 
+if (! $?TMPDIR) then # this should typically be defined already
+  setenv TMPDIR "/tmp"
+  if ( ! -d $TMPDIR ) then # try again
+    setenv TMPDIR $baseoutd/tmp
+  endif
+endif
+
 set tmpd = $TMPDIR/`whoami`/$$
 rm -rf $tmpd
 mkdir -p $tmpd
@@ -33,6 +40,9 @@ set table = $tmpd/$samplenm.fiberseq.all.tbl
 ft extract -t 8 $baminp --all - \
   | $src_dir/details/cutnm 5mC,ec,fiber,fiber_length,m6a,msp_lengths,msp_starts,nuc_lengths,nuc_starts,rq,total_5mC_bp,total_AT_bp,total_m6a_bp \
  >! $table
+
+# get #reads
+(samtools view -c $baminp >! $tmpd/nreads.txt) &
 
 # qc_msp
 ($src_dir/details/make-plot-msp-lengths.sh \
@@ -164,9 +174,11 @@ cat $statsfs \
  >! $baseoutd/$samplenm.qc_stats.txt
 
 # create html outputs
+set nreads = `cat $tmpd/nreads.txt | numfmt --to-unit=1000 --suffix=k`
+set samplenm_html = $samplenm":nreads="$nreads
 set fs = ($pdfs $statsfs)
 $src_dir/details/make-html.tcsh \
-  $samplenm \
+  $samplenm_html \
   $baseoutd/$samplenm.overview.html \
   $baseoutd/$samplenm.qc.html \
   $fs
