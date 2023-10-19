@@ -115,7 +115,8 @@ R --no-save --quiet <<__R__
   cat("Percent(mono/all)=", round(100*r1,1), "%\n", file=stats_file, sep="", append=TRUE)
   r2 <- round(sum(subset(s, V1>=di_lb & V1<=di_ub)[,2])/sum(s[,2]), 4)
   cat("Percent(di/all)=", round(100*r2,1), "%\n", file=stats_file, sep="", append=TRUE)
-  cat("Percent(NucLength)>", mxh, "bp=", round(numf/sum(s[,2])*100, 1), "%\n", file=stats_file, sep="", append=TRUE)
+  cat("Percent(NucLength>", mxh, "bp)=", round(numf/sum(s[,2])*100, 1), "%\n", file=stats_file, sep="", append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 
   mycol <- "darkgreen"
   pdf("$outpdf")

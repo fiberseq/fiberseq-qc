@@ -102,10 +102,11 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat"
   cat("# Note: ***per read number of nucleosomes***\n", file=stats_file, append=FALSE)
-  cat("Percent(NucsPerRead)", ">", mxh, "=", p, "%\n", file=stats_file, sep="", append=TRUE)
+  cat("Percent(NucsPerRead", ">", mxh, ")=", p, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile10%(NucsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(NucsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile90%(NucsPerRead)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 __R__
 
 rm -rf ${tmpd}

@@ -53,11 +53,16 @@ R --no-save --quiet <<__R__
   m <- median(s[s<=mxv])
   plarge <- nlarge/length(s)
 
+  msg <- paste(m)
+  msg2 <- paste(round(plarge*100,1), "%>", mxh, "bp", sep="")
+
   stats_file <- "$outstat"
   prop = round(100*length(s[s<=mxv])/length(s), 1)
   cat("# Note: ***Read length divided by #nucs stats***\n", file=stats_file, append=FALSE)
-  cat("Proportion(ReadLength/#nucs<=", mxv, ")=", prop, "%\n", file=stats_file, sep="", append=TRUE)
+  cat("Percent(ReadLength/#nucs<=", mxv, ")=", prop, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(ReadLength/#nucs<=", mxv, ")=", m, "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("Percent(ReadLength/#nucs>", mxh, "bp)=", round(plarge*100,1), "%", sep=""), "\n", file=stats_file, append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 
   mycol <- "darkgreen"
   pdf("$outpdf")
@@ -66,11 +71,7 @@ R --no-save --quiet <<__R__
   rect(0, 0, mxv, max(h[["counts"]]/2), col=alpha(mycol, 0.25), border=NA)
   # plot again to put rect in background
   h <- hist(s, xlim=c(0, mxh), breaks=1000, axes=F, main=paste("$samplenm"), xlab="Read Length (bp)/# nucleosome footprints per read", ylab="Count", add=T)
-  #abline(v=mxv, col=alpha(mycol, 0.25), lty=2, lwd=3)
-  #abline(v=0, col=alpha(mycol, 0.25), lty=2, lwd=3)
   abline(v=m, col=mycol, lty=1)
-  msg <- paste(m)
-  msg2 <- paste(round(plarge*100,1), "% >", mxh, "bp", sep="")
 
   xv <- 75
   offxv <- 8

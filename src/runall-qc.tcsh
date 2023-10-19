@@ -70,9 +70,10 @@ set pdfs = ($pdfs $baseoutd/$samplenm.qc_nuc_lengths.pdf)
   $table \
   $baseoutd/$samplenm.qc_m6a_per_read.pdf \
   $baseoutd/$samplenm.qc_ccs_passes.pdf \
-  $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt) &
+  $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt \
+  $baseoutd/$samplenm.qc_m6a.intermediate.stat_ccs_passes.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt) # must duplicate
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt $baseoutd/$samplenm.qc_m6a.intermediate.stat_ccs_passes.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_m6a_per_read.pdf $baseoutd/$samplenm.qc_ccs_passes.pdf)
 
 # qc_nucs_per_read

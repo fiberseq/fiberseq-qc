@@ -80,7 +80,7 @@ R --no-save --quiet <<__R__
   abline(v=scores_50, col=mycol, lty=1)
   abline(v=scores_90, col=mycol, lty=1)
 
-  msg1 <- paste(pl, "% > ", mxx, "bp", sep="")
+  msg1 <- paste(pl, "% > ", mxx, sep="")
   msg2 <- paste(scores_10)
   msg3 <- paste(scores_50)
   msg4 <- paste(scores_90)
@@ -102,6 +102,8 @@ R --no-save --quiet <<__R__
   cat("Quantile10%(mCpGsPerKB)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(mCpGsPerKB)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile90%(mCpGsPerKB)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("Percent(mCpGsPerKB>", mxx, ")=", pl, "%", "\n", sep=""), file=stats_file, sep="", append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 __R__
 
 rm -rf ${tmpd}

@@ -97,8 +97,11 @@ R --no-save --quiet <<__R__
   msp_med <- fast_median(ss, 0, mxh)
   stats_file <- "$outstat"
   cat("# Note: ***MSP stats***\n", file=stats_file, append=FALSE)
-  cat("MSPs>150=", p2, "%\n", file=stats_file, sep="", append=TRUE)
+  cat("Percent(MSPs>150)=", p2, "%\n", file=stats_file, sep="", append=TRUE)
+  cat("Percent(MSPs==1bp)=", p, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(MSPs!=1bp)=", msp_med, "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("Percent(MSPs>", mxh, "bp)=", pl, "%", sep=""), "\n", file=stats_file, sep="", append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 
   s <- s[,2]
 
@@ -108,7 +111,7 @@ R --no-save --quiet <<__R__
   abline(v=msp_med, col=mycol, lty=1)
   msg <- paste(msp_med)
   msg2 <- paste(p, "% of MSPs are 1 bp", sep="")
-  msg3 <- paste(pl, "% > ", mxh, "bp", sep="")
+  msg3 <- paste(pl, "%>", mxh, "bp", sep="")
 
   mxc <- max(s)
   xv <- 75

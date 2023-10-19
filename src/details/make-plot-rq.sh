@@ -81,6 +81,8 @@ R --no-save --quiet <<__R__
   stats_file <- "$outstat"
   cat("# Note: ***read quality stats***\n", file=stats_file, sep="", append=FALSE)
   cat("Median(-10*log10(1-rq))=", m, "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("Percent(Quality)>QV50)=", perc, "%\n", sep=""), file=stats_file, sep="", append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 __R__
 
 rm -rf ${tmpd}
