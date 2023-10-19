@@ -96,7 +96,7 @@ R --no-save --quiet <<__R__
   cat("Percent(#m6A/#ATs<0.2)=", pv2, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(#m6A/#ATs)=", mp, "\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(#m6A/#ATs>", maxx, ")=", paste(round(b,1)), "%\n", file=stats_file, sep="", append=TRUE)
-  cat("Fibers(-m6A)=", nzero, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Number(-m6A)=", nzero, "\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(-m6A)=", round(100*nzero/dim(ndf)[1],1), "%\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 

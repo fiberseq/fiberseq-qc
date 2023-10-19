@@ -123,7 +123,7 @@ R --no-save --quiet <<__R__
   cat("Quantile10%(ReadLength)=", reads_10, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(ReadLength)=", reads_50, "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile90%(ReadLength)=", reads_90, "\n", file=stats_file, sep="", append=TRUE)
-  cat(paste("Percent(ReadLength)>", paste(mxh/1000, "kb", sep=""), "=", p, "%\n", sep=""), file=stats_file, sep="", append=TRUE)
+  cat(paste("Percent(ReadLength>", paste(mxh/1000, "kb)", sep=""), "=", p, "%\n", sep=""), file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 __R__
 
