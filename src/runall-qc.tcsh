@@ -175,6 +175,12 @@ cat $statsfs \
  >! $baseoutd/$samplenm.qc_stats.txt
 
 # create html outputs
+if ( ! -s $tmpd/nreads.txt ) then
+  printf "Problem with counting reads in %s\n" $baminp
+  printf "This could be a truncation problem\n"
+  printf "Failed command: samtools view -c <bam>\n"
+  exit -1
+endif
 set nreads = `cat $tmpd/nreads.txt | numfmt --to-unit=1000 --suffix=k`
 set samplenm_html = $samplenm":nreads="$nreads
 set fs = ($pdfs $statsfs)
