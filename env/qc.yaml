@@ -20,7 +20,7 @@ dependencies:
   - r-ggpubr
   - r-rcolorbrewer
   - bioconda::bioconductor-iranges
-  - samtools
+  - samtools>=1.18
   - imagemagick
   - fibertools-rs
 
