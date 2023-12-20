@@ -183,7 +183,7 @@ if ( ! -s $tmpd/nreads.txt ) then
   printf "Failed command: samtools view -c <bam>\n"
   exit -1
 endif
-set nreads = `cat $tmpd/nreads.txt | numfmt --to-unit=1000 --suffix=k`
+set nreads = `cat $tmpd/nreads.txt | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
 set samplenm_html = $samplenm":nreads="$nreads
 set fs = ($pdfs $statsfs)
 $src_dir/details/make-html.tcsh \
