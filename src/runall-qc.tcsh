@@ -171,7 +171,9 @@ end
 wait
 
 # qc_combine_stats
-cat $statsfs \
+cat $tmpd/nreads.txt \
+  | awk '{ printf "# Note: ***Unaligned Reads***\nNumber(Reads)=%s\n\n", $1; }' \
+  | cat - $statsfs \
  >! $baseoutd/$samplenm.qc_stats.txt
 
 # create html outputs
