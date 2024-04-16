@@ -22,7 +22,8 @@ set sample_nm = `echo "$sample" | awk '{ split($0, a, ":"); print a[1]; }'`
 set sample_info = `echo "$sample" | awk '{ n=split($0, a, ":"); if(n>1) print a[2]; }'`
 
 cat <<__HTML__ >! $html
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <style>
       table, th, td {
