@@ -75,7 +75,8 @@ __HTML__
 
 set pdf = `echo $pdfs | tr ' ' '\n' | grep -e ".pdf" | head -1`
 cat <<__HTML__ >! $overview
-<html>
+<!doctype html>
+<html lang="en">
   <head>
     <style>
       html,body {
