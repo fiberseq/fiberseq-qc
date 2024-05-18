@@ -79,7 +79,7 @@ cat <<__HTML__ >! $overview
 <html lang="en">
   <head>
     <style>
-      html,body {
+      html,body,div {
         width: 100%;
         height: 100%;
       }
