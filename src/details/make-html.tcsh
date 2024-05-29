@@ -48,7 +48,7 @@ __HTML__
 @ cntr = 1
 foreach pdf ($pdfs)
   if ( ! -s $pdf:r.png ) then
-    convert $pdf $pdf:r.png
+    magick $pdf $pdf:r.png
   endif
   set nm = `echo $pdf:t:r | cut -f2- -d'.' | sed 's;qc_;;g'`
   printf '      <tr>' >>! $html
