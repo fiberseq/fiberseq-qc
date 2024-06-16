@@ -42,26 +42,28 @@ cat <<__HTML__ >! $html
   </head>
   <body>
     <table>
-    <caption><h1>QC Report: $sample_nm</h1><h2>$sample_info</h2></caption>
+      <caption><h1>QC Report: $sample_nm</h1><h2>$sample_info</h2></caption>
+      <tbody>
 __HTML__
 
 @ cntr = 1
 foreach pdf ($pdfs)
-  if ( ! -s $pdf:r.png ) then
-    magick $pdf $pdf:r.png
-  endif
+  magick $pdf $pdf:r.png
+
   set nm = `echo $pdf:t:r | cut -f2- -d'.' | sed 's;qc_;;g'`
-  printf '      <tr>' >>! $html
-  printf '        <th>'$nm'</th>' >>! $html
-  printf '        <td style="text-align: center;"><img src="'$pdf:t:r.png'" alt="'$pdf:t'" onmouseenter="hover(this)"></img></td>' >>! $html
-  printf '        <td style="text-align: center;"><pre>' >>! $html
+  set alt = $pdf:t
+  
+  printf '        <tr>' >>! $html
+  printf '          <td style="text-align: center;"><img src="'$pdf:t:r.png'" alt="'$alt'" onmouseenter="hover(this)"></img></td>' >>! $html
+  printf '          <td style="text-align: center;"><bold>'$nm'</bold><br/><pre>' >>! $html
   cat $txts[$cntr] | grep -vi "# Note: \*" >>! $html
-  printf '        </pre></td>\n' >>! $html
-  printf '      </tr>\n' >>! $html
+  printf '          </pre></td>\n' >>! $html
+  printf '        </tr>\n' >>! $html
   @ cntr++
 end
 
 cat << __HTML__ >>! $html
+      </tbody>
     </table>
     <script>
       function hover(element) {
@@ -87,8 +89,8 @@ cat <<__HTML__ >! $overview
   </head>
   <body>
     <div class="container">
-      <iframe id="TNAILS" src="$html:t" frameborder="0" scrolling="yes" style="height: 100%; width: 35%; float: left;" align="left"></iframe>
-      <iframe id="FULLIMG" src="$pdf:t" frameborder="0" scrolling="yes" style="overflow: hidden; height: 100%; width:65%;" align="right"></iframe>
+      <iframe id="TNAILS" src="$html:t" frameborder="0" scrolling="yes" style="height: 100%; width: 26%; float: left;" align="left"></iframe>
+      <iframe id="FULLIMG" src="$pdf:t" frameborder="0" scrolling="yes" style="overflow: hidden; height: 100%; width:74%;" align="right"></iframe>
       <script>
         window.onmessage = function(msg) {
           const img = document.getElementById("FULLIMG")
