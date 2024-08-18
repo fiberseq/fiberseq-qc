@@ -4,15 +4,16 @@
 
 set -euo pipefail
 
-if [[ $# != 4 ]]; then
-  printf "Expect $0 <sample-name> <input-table> <output-pdf> <output-stat.txt>\n"
+if [[ $# != 5 ]]; then
+  printf "Expect $0 <sample-name> <input-table> <max-x-scale> <output-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
 samplenm=$1
 inp=$2 # fiber-all-table.tbl.gz
-outpdf=$3
-outstat=$4
+max_x_scale=$3 # should be an integer
+outpdf=$4
+outstat=$5
 
 if [ ! -s ${inp} ]; then
   printf "Problem finding 1 file: %s\n" ${inp}
@@ -60,7 +61,7 @@ R --no-save --quiet <<__R__
   }
 
   s <- read.table("$tmpd/$samplenm.$ftype", header=FALSE, sep="\t", row.names=NULL)
-  mxh = 50000
+  mxh <- as.integer("$max_x_scale")
 
   # those reads with size > mxh, are put in the mxh bin
   f <- subset(s, V1>mxh)

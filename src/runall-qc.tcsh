@@ -16,6 +16,11 @@ set baseoutd = $1
 set samplenm = $2
 set baminp   = $3 # <samplenm>.fiberseq.bam with corresponding bai file
 
+if (! -s $baminp ) then
+  printf "Bad <fiberseq.bam> file given:\n" $baminp
+  exit -1
+endif
+
 if (! $?TMPDIR) then # this should typically be defined already
   setenv TMPDIR "/tmp"
   if ( ! -d $TMPDIR ) then # try again
@@ -34,6 +39,13 @@ set src_dir = $src_dir:h
 
 set statsfs = ()
 set pdfs = ()
+
+# PacBio or ONT?
+set tech = `samtools view -H $baminp | grep -e "PL:" | awk 'NR == 1' | tr '\t' '\n' | awk '$1 ~ /^PL:/' | cut -f2 -d':' | tr '[[:upper:]]' '[[:lower:]]' || true`
+if ( "$tech" != "pacbio" && "$tech" != "ont" ) then
+  printf "Unknown tech found: %s.\nExpect value PacBio or ONT\n" $tech
+  exit -1
+endif
 
 # create table; cut out what is needed to save disk space
 set table = $tmpd/$samplenm.fiberseq.all.tbl
@@ -107,14 +119,30 @@ set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlength_per_nuc.intermediate.s
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlength_per_nuc.pdf)
 
 # qc_readlengths
+if ( "$tech" == "pacbio" ) then
+  set max_scale = 50000
+else # ONT
+  set max_scale = 250000
+endif
 ($src_dir/details/make-plot-readlengths.sh \
   $samplenm \
   $table \
+  $max_scale \
   $baseoutd/$samplenm.qc_readlengths.pdf \
   $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt) &
 
 set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlengths.pdf)
+
+# qc_resolution
+($src_dir/details/make-plot-msp-resolution.sh \
+  $samplenm \
+  $table \
+  $baseoutd/$samplenm.qc_msp_resolution.pdf \
+  $baseoutd/$samplenm.qc_msp_resolution.intermediate.stat.txt) &
+
+set statsfs = ($statsfs $baseoutd/$samplenm.qc_msp_resolution.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.qc_msp_resolution.pdf)
 
 # qc_rq
 ($src_dir/details/make-plot-rq.sh \
