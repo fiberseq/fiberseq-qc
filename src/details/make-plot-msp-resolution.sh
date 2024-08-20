@@ -105,6 +105,11 @@ R --no-save --quiet <<__R__
           pch = 16,
           cex = 0.5)
   dev.off()
+
+  stats_file <- "$outstat"
+  target_bin <- "175-200"
+  median_value <- median(data[["m6a_count"]][data[["bin"]] == target_bin])
+  cat("Median(175-200)=", median_value, "\n", file=stats_file, sep="", append=TRUE)
 __R__
 
 rm -rf ${tmpd}
