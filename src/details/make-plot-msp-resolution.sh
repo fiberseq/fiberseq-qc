@@ -109,7 +109,7 @@ R --no-save --quiet <<__R__
   stats_file <- "$outstat"
   target_bin <- "175-200"
   median_value <- median(data[["m6a_count"]][data[["bin"]] == target_bin])
-  cat("***MSP Resolution stats***\n", file=stats_file, sep="", append=FALSE)
+  cat("# Note: ***MSP Resolution stats***\n", file=stats_file, sep="", append=FALSE)
   cat("Median(", target_bin, ")=", median_value, "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 __R__
