@@ -41,8 +41,7 @@ nreads=100
 # pacbio 'fiber' names are of the form m84046_230715_053754_s4/240455876/ccs -> use middle value
 # nanopore 'fiber' names have not had '/' in the names so far -> use full name
 BASEDIR=$(dirname "$0")
-cat ${tmpd}/sample.bam \
-  | ft extract --all - \
+ft extract --all - ${tmpd}/sample.bam \
   | ${BASEDIR}/cutnm m6a,msp_starts,msp_lengths,nuc_starts,nuc_lengths,fiber_length,fiber \
   | awk 'NR > 1' \
   | awk 'BEGIN {OFS="\t"; print "Fiber", "Feature", "Start", "End"} ; { \

@@ -29,10 +29,16 @@ mkdir -p $(dirname "${outstat}")
 # bins set by Andrew
 bins="20,40,60,80,100,125,150,175,200,225,250,300,350,400,500"
 
+# Mitchell suggested just using a sample for this qc plot
+#  $inp is from unaligned bam and is in arbitrary order
+# subshell to get around awk's exit early return, pipe-related problems
+#  without exit 0, the whole input is read through
+nreads=1000000
 BASEDIR=$(dirname "$0")
-${BASEDIR}/cutnm msp_starts,msp_lengths,m6a ${inp} |
+(${BASEDIR}/cutnm msp_starts,msp_lengths,m6a ${inp} |
   awk 'NR > 1' |
   awk '$1 != "."' |
+  awk -v n=${nreads} 'NR <= n {print} NR > n {exit 0}' || true) |
   awk 'BEGIN {OFS="\t"} ; { \
         nmsp=split($1, a, ","); \
         split($2, b, ","); \
@@ -54,11 +60,9 @@ ${BASEDIR}/cutnm msp_starts,msp_lengths,m6a ${inp} |
           print m6a_count/b[i], b[i]; \
         } \
       }' |
-  awk -v bins=${bins}  -v o=${outstat} \
+  awk -v bins=${bins} \
       'BEGIN {OFS="\t"; split(bins,b,",")} ; { \
         if($2>=b[1]) { print } \
-      } END { \
-        printf "Number(MSPs)=%s\n", NR > o".tmp"; \
       }' |
   awk -v bins=${bins} \
       'BEGIN {OFS="\t"; nbins=split(bins,b,",")} ; { \
@@ -72,10 +76,6 @@ ${BASEDIR}/cutnm msp_starts,msp_lengths,m6a ${inp} |
         } \
       }' \
    >${tmpd}/${samplenm}.${ftype}
-
-# format the #msps
-sed ':a;s/\B[0-9]\{3\}\>/,&/;ta' < ${outstat}.tmp > ${outstat}
-rm -f ${outstat}.tmp
 
 R --no-save --quiet <<__R__
   df <- read.table("$tmpd/$samplenm.$ftype", header=FALSE, sep="\t", row.names=NULL)
@@ -109,7 +109,9 @@ R --no-save --quiet <<__R__
   stats_file <- "$outstat"
   target_bin <- "175-200"
   median_value <- median(data[["m6a_count"]][data[["bin"]] == target_bin])
-  cat("Median(175-200)=", median_value, "\n", file=stats_file, sep="", append=TRUE)
+  cat("***MSP Resolution stats***\n", file=stats_file, sep="", append=FALSE)
+  cat("Median(", target_bin, ")=", median_value, "\n", file=stats_file, sep="", append=TRUE)
+  cat("\n", file=stats_file, append=TRUE)
 __R__
 
 rm -rf ${tmpd}
