@@ -94,7 +94,7 @@ R --no-save --quiet <<__R__
   pdf("$outpdf")
   mycol <- "darkgreen"
   boxplot(m6a_count ~ bin, data = data,
-          xlab = "MSP Size", 
+          xlab = "MSP Size (bp)", 
           ylab = "Avg. Resolution for Bin", 
           main = "Resolving Power",
           ylim = c(0,0.5),

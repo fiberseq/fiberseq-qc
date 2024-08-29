@@ -102,8 +102,8 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat_ec"
   cat("# Note: ***Coverage stats***\n", file=stats_file, sep="", append=FALSE)
-  cat("Median(EQ)", "=", round(mc,3), "\n", file=stats_file, sep="")
-  cat(paste("Percent(Coverage>", max_coverage, ")=", round(pcov,2), "%", sep=""), "\n", file=stats_file, append=TRUE)
+  cat("Median(EQ)", "=", round(mc,3), "\n", file=stats_file, sep="", append=TRUE)
+  cat(paste("Percent(Coverage>", max_coverage, ")=", round(pcov,2), "%", sep=""), "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 __R__
 
