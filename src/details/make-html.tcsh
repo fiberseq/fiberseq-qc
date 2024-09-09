@@ -56,7 +56,7 @@ foreach pdf ($pdfs)
   printf '        <tr>' >>! $html
   printf '          <td style="text-align: center;"><img src="'$pdf:t:r.png'" alt="'$alt'" onmouseenter="hover(this)"></img></td>' >>! $html
   printf '          <td style="text-align: center;"><bold>'$nm'</bold><br/><pre>' >>! $html
-  cat $txts[$cntr] | grep -vi "# Note: \*" >>! $html
+  cat $txts[$cntr] | grep -vi -e "# Note: \*" -e "# Stats:" >>! $html
   printf '          </pre></td>\n' >>! $html
   printf '        </tr>\n' >>! $html
   @ cntr++

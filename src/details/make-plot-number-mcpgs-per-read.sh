@@ -24,6 +24,7 @@ fi
 
 ftype=mcpg
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -99,6 +100,7 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat"
   cat("# Note: ***number of mCpGs per kb***\n", file=stats_file, append=FALSE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile10%(mCpGsPerKB)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(mCpGsPerKB)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile90%(mCpGsPerKB)=", scores_90, "\n", file=stats_file, sep="", append=TRUE)

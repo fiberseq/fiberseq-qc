@@ -22,6 +22,7 @@ fi
 
 ftype=readlengths
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -121,6 +122,7 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat"
   cat("# Note: ***Read length stats***\n", file=stats_file, append=FALSE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile10%(ReadLength)=", reads_10, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(ReadLength)=", reads_50, "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile90%(ReadLength)=", reads_90, "\n", file=stats_file, sep="", append=TRUE)

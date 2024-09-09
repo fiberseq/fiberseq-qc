@@ -21,6 +21,7 @@ fi
 
 ftype=m6a.autocor
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf $tmpd
 mkdir -p $tmpd
 mkdir -p $(dirname "${outpdf}")
@@ -211,6 +212,7 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat"
   cat("# Note: ***Autocorrelation stats***\n", file=stats_file, append=FALSE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat(paste("X[Y==0]=", paste(xcross, collapse=","), "\n", sep=""), file=stats_file, append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 

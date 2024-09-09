@@ -10,6 +10,14 @@ if ( $#argv != 3 ) then
   exit -1
 endif
 
+# check if correct conda environment is activated
+set req_env = "fiberseq-qc"
+set env_check = `env | grep CONDA_DEFAULT_ENV | awk -F"=" '{ print $2 }'`
+if ( "$env_check" != "$req_env" ) then
+  printf "Require conda environment activated: %s\n" $req_env
+  exit -1
+endif
+
 set echo
 
 set baseoutd = $1
@@ -17,7 +25,7 @@ set samplenm = $2
 set baminp   = $3 # <samplenm>.fiberseq.bam with corresponding bai file
 
 if (! -s $baminp ) then
-  printf "Bad <fiberseq.bam> file given:\n" $baminp
+  printf "Bad <fiberseq.bam> file given:\n  %s\n" $baminp
   exit -1
 endif
 
@@ -56,161 +64,175 @@ ft extract -t 8 $baminp --all - \
 # get #reads
 (samtools view -c $baminp >! $tmpd/nreads.txt) &
 
-# qc_msp
+# msp
+set stat_name = 'msp_lengths'
 ($src_dir/details/make-plot-msp-lengths.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_msp_lengths.pdf \
-  $baseoutd/$samplenm.qc_msp_lengths.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_msp_lengths.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_msp_lengths.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_nuc
+# nuc
+set stat_name = 'nuc_lengths'
 ($src_dir/details/make-plot-nuc-lengths.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_nuc_lengths.pdf \
-  $baseoutd/$samplenm.qc_nuc.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_nuc.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_nuc_lengths.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_m6a
+# m6a
+set stat1_name = 'm6a_per_read'
+set stat2_name = 'ccs_passes'
 ($src_dir/details/make-plot-number-m6a-per-read.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_m6a_per_read.pdf \
-  $baseoutd/$samplenm.qc_ccs_passes.pdf \
-  $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt \
-  $baseoutd/$samplenm.qc_m6a.intermediate.stat_ccs_passes.txt) &
+  $baseoutd/$samplenm.$stat1_name.pdf \
+  $baseoutd/$samplenm.$stat2_name.pdf \
+  $baseoutd/$samplenm.$stat1_name.intermediate.stat.txt \
+  $baseoutd/$samplenm.$stat2_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_m6a.intermediate.stat.txt $baseoutd/$samplenm.qc_m6a.intermediate.stat_ccs_passes.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_m6a_per_read.pdf $baseoutd/$samplenm.qc_ccs_passes.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat1_name.intermediate.stat.txt $baseoutd/$samplenm.$stat2_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat1_name.pdf $baseoutd/$samplenm.$stat2_name.pdf)
 
-# qc_nucs_per_read
+# nucs_per_read
+set stat_name = 'number_nucs_per_read'
 ($src_dir/details/make-plot-number-nucs-per-read.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_number_nucs_per_read.pdf \
-  $baseoutd/$samplenm.qc_number_nucs_per_read.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_number_nucs_per_read.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_number_nucs_per_read.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_5mCs_per_read
+# 5mCs_per_read
+set stat_name = 'number_cpgs_per_read'
 ($src_dir/details/make-plot-number-mcpgs-per-read.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_number_cpgs_per_read.pdf \
-  $baseoutd/$samplenm.qc_number_cpgs_per_read.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_number_cpgs_per_read.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_number_cpgs_per_read.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_readlength_per_nuc
+# readlength_per_nuc
+set stat_name = 'readlength_per_nuc'
 ($src_dir/details/make-plot-readlength-per-nuc.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_readlength_per_nuc.pdf \
-  $baseoutd/$samplenm.qc_readlength_per_nuc.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlength_per_nuc.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlength_per_nuc.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_readlengths
+# readlengths
 if ( "$tech" == "pacbio" ) then
   set max_scale = 50000
 else # ONT
   set max_scale = 250000
 endif
+set stat_name = 'readlengths'
 ($src_dir/details/make-plot-readlengths.sh \
   $samplenm \
   $table \
   $max_scale \
-  $baseoutd/$samplenm.qc_readlengths.pdf \
-  $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_readlengths.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_readlengths.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_resolution
+# resolution
+set stat_name = 'msp_resolution'
 ($src_dir/details/make-plot-msp-resolution.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_msp_resolution.pdf \
-  $baseoutd/$samplenm.qc_msp_resolution.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_msp_resolution.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_msp_resolution.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_rq
+# rq
+set stat_name = 'readquality'
 ($src_dir/details/make-plot-rq.sh \
   $samplenm \
   $table \
-  $baseoutd/$samplenm.qc_readquality.pdf \
-  $baseoutd/$samplenm.qc_readquality.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_readquality.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_readquality.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_autocorrelation
+# autocorrelation
+set stat_name = 'autocorrelation'
 ($src_dir/details/make-plot-autocorrelation.sh \
   $samplenm \
   $baminp \
-  $baseoutd/$samplenm.qc_autocorrelation.pdf \
-  $baseoutd/$samplenm.qc_autocorrelation.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_autocorrelation.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_autocorrelation.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# qc_randfibers
+# randfibers
+set stat_name = 'randfibers'
 set maxz = 20000
 ($src_dir/details/make-plot-rand-fibers.sh \
   $samplenm \
   $baminp \
   0 \
   $maxz \
-  $baseoutd/$samplenm.qc_randfibers.pdf \
-  $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt) &
+  $baseoutd/$samplenm.$stat_name.pdf \
+  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.pdf)
+set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# zoomed qc_randfibers : 2k-4k to start
+# zoomed randfibers : 2k-4k to start
 set lastz = 2000
 set zooms = (4000)
 foreach z ($zooms)
   set znm = `echo $z | numfmt --to-unit=1000 --suffix=K`
   set lastznm = `echo $lastz | numfmt --to-unit=1000 --suffix=K`
+  set stat_name = "randfibers."$lastznm"-"$znm
   ($src_dir/details/make-plot-rand-fibers.sh \
     $samplenm \
     $baminp \
     $lastz \
     $z \
-    $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.pdf \
-    $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.intermediate.stat.txt) &
+    $baseoutd/$samplenm.$stat_name.pdf \
+    $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-  set statsfs = ($statsfs $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.intermediate.stat.txt)
-  set pdfs = ($pdfs $baseoutd/$samplenm.qc_randfibers.$lastznm"-"$znm.pdf)
+  set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+  set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
   set lastz = $z
 end
 
 wait
 
-# qc_combine_stats
-cat $tmpd/nreads.txt \
-  | awk '{ printf "# Note: ***Unaligned Reads***\nNumber(Reads)=%s\n\n", $1; }' \
-  | cat - $statsfs \
- >! $baseoutd/$samplenm.qc_stats.txt
-
-# create html outputs
 if ( ! -s $tmpd/nreads.txt ) then
   printf "Problem with counting reads in %s\n" $baminp
   printf "This could be a truncation problem\n"
   printf "Failed command: samtools view -c <bam>\n"
   exit -1
 endif
+
+# combine stats
+cat $tmpd/nreads.txt \
+  | awk '{ printf "# Note: ***Unaligned Reads***\n# Stats:nreads\nNumber(Reads)=%s\n\n", $1; }' \
+  | cat - $statsfs \
+ >! $baseoutd/$samplenm.qc_stats.txt
+
+# create html outputs
 set nreads = `cat $tmpd/nreads.txt | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
 set samplenm_html = $samplenm":nreads="$nreads
 set fs = ($pdfs $statsfs)
@@ -220,10 +242,7 @@ $src_dir/details/make-html.tcsh \
   $baseoutd/$samplenm.qc.html \
   $fs
 
-foreach s ($statsfs)
-  rm -f $s
-end
-
+rm -f $statsfs
 rm -rf $tmpd
 
 exit 0

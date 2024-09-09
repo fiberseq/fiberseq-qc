@@ -25,6 +25,7 @@ fi
 
 ftype=nuc
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -107,6 +108,7 @@ R --no-save --quiet <<__R__
   cat("# Note: ***Nucleosome stats***\n", file=stats_file, sep="", append=FALSE)
   cat("# Note: ", mono_lb, "bp <= mono_nuc <= ", mono_ub, "bp\n", file=stats_file, sep="", append=TRUE)
   cat("# Note: ", di_lb, "bp <= di_nuc <= ", di_ub, "bp\n", file=stats_file, sep="", append=TRUE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(mono_nuc)=", mono_nuc_med, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(di_nuc)=", di_nuc_med, "\n", file=stats_file, sep="", append=TRUE)
   ratio <- round(sum(subset(s, V1>=mono_lb & V1<=mono_ub)[,2])/sum(subset(s, V1>=di_lb & V1<=di_ub)[,2]), 4)

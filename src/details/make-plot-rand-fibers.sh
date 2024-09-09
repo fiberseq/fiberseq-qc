@@ -23,6 +23,7 @@ fi
 
 ftype=fibers.sample
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -89,6 +90,7 @@ R --no-save --quiet <<__R__
   stats_file <- "${outstat}"
   cat("# Note: ***Random fiber stats***\n", file=stats_file, append=FALSE)
   cat(paste("# Note: Range ", "$xmn_nm", "-", "$xmx_nm", sep=""), "\n", file=stats_file, sep="", append=TRUE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat(paste("Number(Fibers)=", length(unique(df[["Fiber"]])), "/", "$nreads", sep=""), "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 

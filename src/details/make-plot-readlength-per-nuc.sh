@@ -27,6 +27,7 @@ fi
 
 ftype=readlength.div.number.nucleosomes
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -59,6 +60,7 @@ R --no-save --quiet <<__R__
   stats_file <- "$outstat"
   prop = round(100*length(s[s<=mxv])/length(s), 1)
   cat("# Note: ***Read length divided by #nucs stats***\n", file=stats_file, append=FALSE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(ReadLength/#nucs<=", mxv, ")=", prop, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(ReadLength/#nucs<=", mxv, ")=", m, "\n", file=stats_file, sep="", append=TRUE)
   cat(paste("Percent(ReadLength/#nucs>", mxh, "bp)=", round(plarge*100,1), "%", sep=""), "\n", file=stats_file, append=TRUE)

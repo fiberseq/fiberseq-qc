@@ -24,6 +24,7 @@ fi
 
 ftype=nuc
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -102,6 +103,7 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat"
   cat("# Note: ***per read number of nucleosomes***\n", file=stats_file, append=FALSE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(NucsPerRead", ">", mxh, ")=", p, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile10%(NucsPerRead)=", scores_10, "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(NucsPerRead)=", scores_50, "\n", file=stats_file, sep="", append=TRUE)

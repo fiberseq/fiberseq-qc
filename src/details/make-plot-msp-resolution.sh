@@ -21,6 +21,7 @@ fi
 
 ftype=msp
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -110,6 +111,7 @@ R --no-save --quiet <<__R__
   target_bin <- "175-200"
   median_value <- median(data[["m6a_count"]][data[["bin"]] == target_bin])
   cat("# Note: ***MSP Resolution stats***\n", file=stats_file, sep="", append=FALSE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(", target_bin, ")=", median_value, "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 __R__

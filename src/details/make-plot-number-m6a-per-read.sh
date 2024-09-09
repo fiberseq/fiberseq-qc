@@ -26,6 +26,8 @@ fi
 
 ftype=m6a
 tmpd=${TMPDIR}/$(whoami)/$$
+stat_name=$(basename "$outstat" | cut -f2 -d'.')
+stat_name2=$(basename "$outstat_ec" | cut -f2 -d'.')
 rm -rf ${tmpd}
 mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
@@ -92,6 +94,7 @@ R --no-save --quiet <<__R__
   stats_file <- "$outstat"
   cat("# Note: ***#m6A/#ATs stats***\n", file=stats_file, sep="", append=FALSE)
   #cat("# Note: #m6A/#ATs filtered to reads with Coverage > 0\n", file=stats_file, sep="", append=TRUE)
+  cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(#m6A/#ATs<0.01)=", pv1, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(#m6A/#ATs<0.2)=", pv2, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(#m6A/#ATs)=", mp, "\n", file=stats_file, sep="", append=TRUE)
@@ -102,6 +105,7 @@ R --no-save --quiet <<__R__
 
   stats_file <- "$outstat_ec"
   cat("# Note: ***Coverage stats***\n", file=stats_file, sep="", append=FALSE)
+  cat("# Stats:", "$stat_name2", "\n", file=stats_file, sep="", append=TRUE)
   cat("Median(EQ)", "=", round(mc,3), "\n", file=stats_file, sep="", append=TRUE)
   cat(paste("Percent(Coverage>", max_coverage, ")=", round(pcov,2), "%", sep=""), "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
