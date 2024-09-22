@@ -99,7 +99,7 @@ R --no-save --quiet <<__R__
   stats_file <- "$outstat"
   cat("# Note: ***MSP stats***\n", file=stats_file, append=FALSE)
   cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
-  cat("Percent(MSPs>150)=", p2, "%\n", file=stats_file, sep="", append=TRUE)
+  cat("Percent(MSPs>150bp)=", p2, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Percent(MSPs==1bp)=", p, "%\n", file=stats_file, sep="", append=TRUE)
   cat("Median(MSPs!=1bp)=", msp_med, "\n", file=stats_file, sep="", append=TRUE)
   cat(paste("Percent(MSPs>", mxh, "bp)=", pl, "%", sep=""), "\n", file=stats_file, sep="", append=TRUE)
