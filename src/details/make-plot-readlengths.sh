@@ -115,6 +115,7 @@ R --no-save --quiet <<__R__
   par(cex=0.8)
   legend("topright",
          legend=nnum,
+         col=mycol,
          box.lty=0,
         )
 

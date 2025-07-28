@@ -168,13 +168,16 @@ R --no-save --quiet <<__R__
     theme_minimal() +
     labs(title = "Smoothed autocorrelation with peaks", y = "Autocorrelation", x = "Lag") +
     annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 2.5,
-         label = paste0(
-           "Peaks=", sprintf("%d", num_peaks),
-           "PeakArea=", sprintf("%.3f", peak_area), "\n",
-           "Area=", sprintf("%.3f", total_area), "\n",
-           "Noise=", sprintf("%.3f", total_diff)
-         ),
-         size = 3.5)
+      label = paste0(
+        "Peaks=", sprintf("%d", num_peaks), "\n",
+        "PeakArea=", sprintf("%.3f", area_peaks), "\n",
+        "Area=", sprintf("%.3f", area_between), "\n",
+        "Noise=", sprintf("%.3f", total_diff), "\n",
+        "Area/Noise=", sprintf("%.3f", area_between / (total_diff + 0.01))
+      ),
+      size = 3.5,
+      color="darkgreen"
+    )
   print(p)
   dev.off()
 __R__
