@@ -17,8 +17,9 @@ dependencies:
   - r-ggside
   - r-splitstackshape
   - r-patchwork
-  - r-ggpubr
   - r-rcolorbrewer
+  - r-pracma
+  - r-zoo
   - bioconda::bioconductor-iranges
   - samtools>=1.18
   - imagemagick
