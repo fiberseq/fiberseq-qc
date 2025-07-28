@@ -152,8 +152,8 @@ R --no-save --quiet <<__R__
   cat(sprintf("Area(Curve)=%.3f\n", area_between), file=stats_file, append=TRUE)
   cat(sprintf("Count(Peaks)=%d\n", num_peaks), file=stats_file, append=TRUE)
   cat(sprintf("Area(Peaks)=%.3f\n", area_peaks), file=stats_file, append=TRUE)
-  cat(sprintf("Diff(Curve-Smooth(Curve))=%.3f\n", total_diff), file=stats_file, append=TRUE)
-  cat(sprintf("Area(Curve)/Diff(Curve-Smooth(Curve))=%.3f\n", total_diff), file=stats_file, append=TRUE)
+  cat(sprintf("Noise(Curve)=%.3f\n", total_diff), file=stats_file, append=TRUE)
+  cat(sprintf("Area(Curve)/Noise(Curve)=%.3f\n", area_between/(total_diff+0.01)), file=stats_file, append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 
   # === Plot ===
@@ -167,9 +167,14 @@ R --no-save --quiet <<__R__
     coord_cartesian(xlim = c(0, 2000)) +
     theme_minimal() +
     labs(title = "Smoothed autocorrelation with peaks", y = "Autocorrelation", x = "Lag") +
-    annotate("text", x = Inf, y = Inf,
-             label = sprintf("Peaks = %d", num_peaks),
-             hjust = 1.1, vjust = 1.5, size = 5)
+    annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 2.5,
+         label = paste0(
+           "Peaks=", sprintf("%d", num_peaks),
+           "PeakArea=", sprintf("%.3f", peak_area), "\n",
+           "Area=", sprintf("%.3f", total_area), "\n",
+           "Noise=", sprintf("%.3f", total_diff)
+         ),
+         size = 3.5)
   print(p)
   dev.off()
 __R__
