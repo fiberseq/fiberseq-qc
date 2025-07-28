@@ -184,7 +184,7 @@ set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
 # autocorrelation smoothed stats
-set stat_name = 'autocorrelation-smoothed'
+set stat_name = 'autocorrelation_smoothed'
 ($src_dir/details/make-plot-autocorrelation-smoothed.sh \
   $samplenm \
   $baminp \
