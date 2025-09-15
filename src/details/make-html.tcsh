@@ -19,7 +19,12 @@ set txts = `echo "$pdfs" | tr ' ' '\n' | grep -e ".txt"`
 set pdfs = `echo "$pdfs" | tr ' ' '\n' | grep -e ".pdf"`
 
 set sample_nm = `echo "$sample" | awk '{ split($0, a, ":"); print a[1]; }'`
-set sample_info = `echo "$sample" | awk '{ n=split($0, a, ":"); if(n>1) print a[2]; }'`
+set sample_fields = (`echo "$sample" | awk -F: '{for(i=2;i<=NF;i++) print $i}'`)
+
+set sample_info = ""
+foreach field ($sample_fields)
+  set sample_info = "$sample_info<span style='font-size:14px; line-height:1.2;'>$field</span><br/>"
+end
 
 cat <<__HTML__ >! $html
 <!doctype html>
@@ -42,7 +47,7 @@ cat <<__HTML__ >! $html
   </head>
   <body>
     <table>
-      <caption><h1>QC Report: $sample_nm</h1><h2>$sample_info</h2></caption>
+      <caption><h1>QC Report: $sample_nm</h1>$sample_info</caption>
       <tbody>
 __HTML__
 

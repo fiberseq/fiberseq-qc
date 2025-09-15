@@ -151,7 +151,7 @@ R --no-save --quiet <<__R__
   cat(sprintf("Asymptote(Curve)=%.3f\n", asymptote), file=stats_file, append=TRUE)
   cat(sprintf("Area(Curve)=%.3f\n", area_between), file=stats_file, append=TRUE)
   cat(sprintf("Count(Peaks)=%d\n", num_peaks), file=stats_file, append=TRUE)
-  cat(sprintf("Area(Peaks)=%.3f\n", area_peaks), file=stats_file, append=TRUE)
+  #cat(sprintf("Area(Peaks)=%.3f\n", area_peaks), file=stats_file, append=TRUE)
   cat(sprintf("Noise(Curve)=%.3f\n", total_diff), file=stats_file, append=TRUE)
   cat(sprintf("Area(Curve)/Noise(Curve)=%.3f\n", area_between/(total_diff+0.01)), file=stats_file, append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
@@ -170,7 +170,7 @@ R --no-save --quiet <<__R__
     annotate("text", x = Inf, y = Inf, hjust = 1.1, vjust = 2.5,
       label = paste0(
         "Peaks=", sprintf("%d", num_peaks), "\n",
-        "PeakArea=", sprintf("%.3f", area_peaks), "\n",
+        #"PeakArea=", sprintf("%.3f", area_peaks), "\n",
         "Area=", sprintf("%.3f", area_between), "\n",
         "Noise=", sprintf("%.3f", total_diff), "\n",
         "Area/Noise=", sprintf("%.3f", area_between / (total_diff + 0.01))

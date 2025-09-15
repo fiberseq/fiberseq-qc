@@ -62,6 +62,7 @@ R --no-save --quiet <<__R__
   }
 
   s <- read.table("$tmpd/$samplenm.$ftype", header=FALSE, sep="\t", row.names=NULL)
+  ssort <- s[order(-s[["V1"]]), ] # not altered, but s is
   mxh <- as.integer("$max_x_scale")
 
   # those reads with size > mxh, are put in the mxh bin
@@ -121,6 +122,15 @@ R --no-save --quiet <<__R__
 
   dev.off()
 
+  # we have things binned into 10 bp segments; close enough for our needs
+  total_bases <- sum(as.numeric(ssort[["V1"]] * ssort[["V2"]]))
+  cum_bases <- cumsum(as.numeric(ssort[["V1"]] * ssort[["V2"]]))
+  N50 <- ssort[["V1"]][which(cum_bases >= total_bases * 0.5)[1]]
+  cum_reads <- cumsum(ssort[["V2"]])
+  total_reads <- sum(ssort[["V2"]])
+  L50_reads <- cum_reads[which(cum_bases >= total_bases * 0.5)[1]]
+  total_gb <- total_bases / 1e9
+
   stats_file <- "$outstat"
   cat("# Note: ***Read length stats***\n", file=stats_file, append=FALSE)
   cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
@@ -128,6 +138,9 @@ R --no-save --quiet <<__R__
   cat("Median(ReadLength)=", reads_50, "\n", file=stats_file, sep="", append=TRUE)
   cat("Quantile90%(ReadLength)=", reads_90, "\n", file=stats_file, sep="", append=TRUE)
   cat(paste("Percent(ReadLength>", paste(mxh/1000, "kb)", sep=""), "=", p, "%\n", sep=""), file=stats_file, sep="", append=TRUE)
+  cat("N50(ReadLength)=", N50, "\n", file=stats_file, sep="", append=TRUE)
+  cat("L50(ReadCount)=", L50_reads, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Total_GB(Bases)=", total_gb, "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 __R__
 
