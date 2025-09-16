@@ -249,7 +249,8 @@ set n50 = `grep -F -e "N50(ReadLength)" $baseoutd/$samplenm.qc_stats.txt | cut -
 set totGB = `grep -F -e "Total_GB(Bases)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
 set medm6A = `grep -F -e "Median(#m6A/#ATs)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
 set s2n = `grep -F -e "Area(Curve)/Noise(Curve)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
-set samplenm_html = $samplenm":nreads="$nreads":n50="$n50":totalGB="$totGB":m6A/AT="$medm6A":s2n="$s2n
+set blockm6A = `grep -F -e "Percent(NucLength>500bp)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
+set samplenm_html = $samplenm":nreads="$nreads":n50="$n50":totalGB="$totGB":m6A/AT="$medm6A":s2n="$s2n":m6A-block="$blockm6A
 set fs = ($pdfs $statsfs)
 $src_dir/details/make-html.tcsh \
   $samplenm_html \
