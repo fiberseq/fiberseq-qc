@@ -23,7 +23,7 @@ set sample_fields = (`echo "$sample" | awk -F: '{for(i=2;i<=NF;i++) print $i}'`)
 
 set sample_info = ""
 foreach field ($sample_fields)
-  set sample_info = "$sample_info<span style='font-size:14px; line-height:1.2;'>$field</span><br/>"
+  set sample_info = "$sample_info<span style='font-size:14px; line-height:1.1;'>$field</span><br/>"
 end
 
 cat <<__HTML__ >! $html
