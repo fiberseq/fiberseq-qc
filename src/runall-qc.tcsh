@@ -246,11 +246,11 @@ cat $tmpd/nreads.txt \
 # create html outputs
 set nreads = `cat $tmpd/nreads.txt | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
 set n50 = `grep -F -e "N50(ReadLength)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'=' | sed ':a;s/\B[0-9]\{3\}\>/,&/;ta'`
-set totGB = `grep -F -e "Total_GB(Bases)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
-set medm6A = `grep -F -e "Median(#m6A/#ATs)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
-set s2n = `grep -F -e "Area(Curve)/Noise(Curve)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
+set totGB = `grep -F -e "Total_GB(Bases)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'=' | awk '{printf "%.2f\n", $1}'`
+set medm6A = `grep -F -e "Median(#m6A/#ATs)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'=' | awk '{printf "%.2f%%\n", $1*100}'`
+set s2n = `grep -F -e "Area(Curve)/Noise(Curve)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'=' | awk '{printf "%.2f\n", $1}'`
 set blockm6A = `grep -F -e "Percent(NucLength>500bp)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
-set samplenm_html = $samplenm":nreads="$nreads":n50="$n50":totalGB="$totGB":m6A/AT="$medm6A":s2n="$s2n":m6A-block="$blockm6A
+set samplenm_html = $samplenm":Number_of_reads="$nreads":N50_length_(bp)="$n50":Total_sequencing_yield_(Gbp)="$totGB":Methylation_rate_(m6A/AT)="$medm6A":Chromatin_signal_to_noise_(CSN)="$s2n":Untreated_fiber_rate_(MSP>500bp)="$blockm6A
 set fs = ($pdfs $statsfs)
 $src_dir/details/make-html.tcsh \
   $samplenm_html \
