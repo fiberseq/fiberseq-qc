@@ -31,11 +31,11 @@ mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
-# in some fiberseq-smk runs, there are 'nucleosomes' of size 1 that are the first and last listed always.  I am throwing out size=1 nucleosomes.
+# if no nuc on read -> no features -> set the nuc size as the whole read
 BASEDIR=$(dirname "$0")
 ${BASEDIR}/cutnm nuc_lengths ${inp} |
   awk 'NR > 1' |
-  awk '$1 != "."' |
+  awk '{ if ($1 == ".") {$1=100000} print; }' |
   rev |
   sed 's;,;;' |
   rev |

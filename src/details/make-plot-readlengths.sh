@@ -32,10 +32,6 @@ mkdir -p $(dirname "${outstat}")
 BASEDIR=$(dirname "$0")
 ${BASEDIR}/cutnm fiber_length ${inp} |
   awk 'NR > 1' |
-  awk '$1 != "."' |
-  rev |
-  sed 's;,;;' |
-  rev |
   awk '{ $1=int($1/10); $1=$1*10; print $1 }' |
   sort -gk1,1 |
   uniq -c |
