@@ -152,27 +152,25 @@ if(length(unique(dists_df[["fiber"]])) < 50) {
     cat("\n", file=stats_file, append=TRUE)
 } else {
     LAG = 220
-    tdf <- copy(
-      dists_df %>%
-        filter(type == "m6A") %>%
-        group_by(tag, fiber) %>%
-        summarise(
-          count = n(),
-          index = if(n() > 0 && all(is.finite(start))) list(seq(0, max(start, na.rm = TRUE)) %in% start) else list(integer(0)),
-          .groups = "drop"
-        ) %>%
-        ungroup() %>%
-        group_by(tag) %>%
-        summarise(
-          auto = acf(as.numeric(unlist(index)), lag.max = LAG, plot = FALSE)[["acf"]],
-          .groups = "drop"
-        ) %>%
-        group_by(tag) %>%
-        mutate(lag = seq_len(n())) %>%
-        ungroup()
-    )
 
-    # add 'change' column safely with data.table := syntax
+    tdf <- dists_df %>%
+      filter(type == "m6A") %>%
+      group_by(tag, fiber) %>%
+      reframe(
+        count = n(),
+        index = if(n() > 0 && all(is.finite(start))) list(seq(0, max(start, na.rm = TRUE)) %in% start) else list(integer(0))
+      ) %>%
+      group_by(tag) %>%
+      summarise(
+        auto = acf(as.numeric(unlist(index)), lag.max = LAG, plot = FALSE)[["acf"]],
+        .groups = "drop"
+      ) %>%
+      ungroup() %>%
+      mutate(lag = seq_len(n())) %>%
+      ungroup() %>%
+      as.data.table()  # fully convert to data.table
+
+    # safe in-place assignment
     tdf[, change := c(0, (auto[1:(.N-1)] * auto[2:.N]) <= 0)]
     xcross <- tdf[change == 1, lag]
 
