@@ -1,6 +1,5 @@
 #!/bin/tcsh -ef
 # author : sjn
-# date : May.2023
 
 if ( $#argv != 3 ) then
   printf "%s\n" $0:t
@@ -49,11 +48,23 @@ set statsfs = ()
 set pdfs = ()
 
 # PacBio or ONT?
-set tech = `samtools view -H $baminp | grep -e "PL:" | awk 'NR == 1' | tr '\t' '\n' | awk '$1 ~ /^PL:/' | cut -f2 -d':' | tr '[[:upper:]]' '[[:lower:]]' || true`
-if ( "$tech" != "pacbio" && "$tech" != "ont" ) then
+set tech = "ignore"
+set tcntr = `samtools view -H $baminp | grep -m1 "PL:" |& tr '\t' '\n' | awk '$1 ~ /^PL:/' | cut -f2 -d':' | tr '[[:upper:]]' '[[:lower:]]'`
+if ( "$tcntr" != "" ) then
+  set tech = "$tcntr"
+endif
+
+if ( "$tech" != "pacbio" && "$tech" != "ont" && "$tech" != "ignore" ) then
   printf "Unknown tech found: %s.\nExpect value PacBio or ONT\n" $tech
   exit -1
 endif
+
+@ ecfilter = 1
+if ( "$tech" != "pacbio" ) then
+  # assume ONT -> no PL: flag
+  @ ecfilter = 0
+endif
+
 
 # create table; cut out what is needed to save disk space
 set table = $tmpd/$samplenm.fiberseq.all.tbl
@@ -177,6 +188,7 @@ set stat_name = 'autocorrelation'
 ($src_dir/details/make-plot-autocorrelation.sh \
   $samplenm \
   $baminp \
+  $ecfilter \
   $baseoutd/$samplenm.$stat_name.pdf \
   $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
@@ -188,6 +200,7 @@ set stat_name = 'autocorrelation_smoothed'
 ($src_dir/details/make-plot-autocorrelation-smoothed.sh \
   $samplenm \
   $baminp \
+  $ecfilter \
   $baseoutd/$samplenm.$stat_name.pdf \
   $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 

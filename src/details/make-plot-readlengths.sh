@@ -28,11 +28,11 @@ mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
-# putting things in bins of size 10
+# putting things in bins of size 10; any length<10 will be set as 10
 BASEDIR=$(dirname "$0")
 ${BASEDIR}/cutnm fiber_length ${inp} |
   awk 'NR > 1' |
-  awk '{ $1=int($1/10); $1=$1*10; print $1 }' |
+  awk '{ $1=int($1/10); $1=$1*10; if($1==0){$1=10} print $1 }' |
   sort -gk1,1 |
   uniq -c |
   awk '{ print $2"\t"$1 }' \
@@ -65,13 +65,22 @@ R --no-save --quiet <<__R__
   f <- subset(s, V1>mxh)
   g <- subset(s, V1<mxh)
   h <- subset(s, V1==mxh)
-  h[,2] <- h[,2] + sum(f[,2])
+
+  if (nrow(h) == 0) {
+    h <- data.frame(V1 = mxh, V2 = sum(f[,2]))
+  } else {
+    h[,2] <- h[,2] + sum(f[,2])
+  }
   p <- round(100*dim(f)[1]/dim(s)[1], 2)
   s <- rbind(g, h)
 
   reads_10 <- fast_kth(s, 0, mxh, 0.1)
   reads_50 <- fast_kth(s, 0, mxh, 0.5)
   reads_90 <- fast_kth(s, 0, mxh, 0.9)
+
+  round_up <- function(x, base) {
+    ceiling(x / base) * base
+  }
 
   mycol <- "darkgreen"
   pdf("$outpdf")
@@ -101,7 +110,10 @@ R --no-save --quiet <<__R__
 
   text(mxh-mxh/16, mxc/div, msg4, col=mycol)
 
-  axis(1, seq(0, mxh, 4000), labels=paste(seq(0, 50, 4), "k", sep=""))
+  nlabels <- 13
+  step <- round_up(mxh / nlabels, 1000)
+
+  axis(1, at = seq(0, mxh, step), labels = paste0(seq(0, mxh, step) / 1000, "k"))
   axis(2)
   gg <- c("Quantile10%", "Median", "Quantile90%")
   gg <- format(gg, justify="left")

@@ -42,6 +42,13 @@ R --no-save --quiet <<__R__
   maxx <- 0.30
   max_coverage <- 30
   s <- read.table("$tmpd/$samplenm.$ftype", header=TRUE, sep="\t", row.names=NULL)
+
+  # If all ec values are 0, set them to 1
+  if(all(s[,3] == 0)) s[,3] <- 1
+
+  # Replace 0s in column 2 with 1 to remove div by 0
+  s[,2][s[,2] == 0] <- 1
+
   p <- s[,1]/s[,2]
   nzero <- length(p[p==0])
   coverage <- s[,3]

@@ -28,9 +28,25 @@ mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
 BASEDIR=$(dirname "$0")
-${BASEDIR}/cutnm rq ${inp} |
-  awk '(NR>1)' \
- >${tmpd}/${samplenm}.${ftype}
+outf=${tmpd}/${samplenm}.${ftype}
+
+${BASEDIR}/cutnm rq "${inp}" \
+  | awk 'NR>1' \
+  | awk '$1 != "."' \
+  > "$outf"
+
+if [ ! -s "$outf" ]; then
+  magick -size 200x100 xc:white -pointsize 20 \
+    -gravity center -annotate 0 "No Data" "$outpdf"
+
+  printf "# Note: ***read quality stats***\n" > "$outstat"
+  printf "# Stats: %s\n" "$stat_name" >> "$outstat"
+  printf "Median(-10*log10(1-rq))=NaN\n" >> "$outstat"
+  printf "Percent(Quality>QV50)=NaN%%\n" >> "$outstat"
+  printf "\n" >> "$outstat"
+
+  exit 0
+fi
 
 R --no-save --quiet <<__R__
   # 0.0 <= quantile <= 1.0
@@ -53,7 +69,7 @@ R --no-save --quiet <<__R__
 
   mnh <- 0.99
   QV50 <- 0.99999
-  s <- scan("$tmpd/$samplenm.$ftype")
+  s <- scan("$outf")
   p <- 100*length(s[s<mnh])/length(s)
 
   count <- length(s[s>QV50])
