@@ -108,7 +108,7 @@ R --no-save --quiet <<__R__
   lines(c(reads_90+rtoff, reads_90), c(mxc/div-strheight(msg3, units="user"), 0), col=mycol)
   text(reads_90+rtoff+3*offxv, mxc/div, msg3, col=mycol, cex=0.9)
 
-  text(mxh-mxh/16, mxc/div, msg4, col=mycol)
+  text(mxh-mxh/17, mxc/div, msg4, col=mycol)
 
   nlabels <- 13
   step <- round_up(mxh / nlabels, 1000)
