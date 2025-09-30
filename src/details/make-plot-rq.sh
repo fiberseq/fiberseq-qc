@@ -37,6 +37,7 @@ ${BASEDIR}/cutnm rq "${inp}" \
 
 if [ ! -s "$outf" ]; then
   magick -size 200x100 xc:white -pointsize 20 \
+    -font DejaVu-Sans \
     -gravity center -annotate 0 "No Data" "$outpdf"
 
   printf "# Note: ***read quality stats***\n" > "$outstat"
