@@ -172,16 +172,18 @@ set stat_name = 'msp_resolution'
 set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
 set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
 
-# rq
-set stat_name = 'readquality'
-($src_dir/details/make-plot-rq.sh \
-  $samplenm \
-  $table \
-  $baseoutd/$samplenm.$stat_name.pdf \
-  $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
+# rq is for pacbio data only
+if ( "$tech" == "pacbio" ) then
+  set stat_name = 'readquality'
+  ($src_dir/details/make-plot-rq.sh \
+    $samplenm \
+    $table \
+    $baseoutd/$samplenm.$stat_name.pdf \
+    $baseoutd/$samplenm.$stat_name.intermediate.stat.txt) &
 
-set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
-set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
+  set statsfs = ($statsfs $baseoutd/$samplenm.$stat_name.intermediate.stat.txt)
+  set pdfs = ($pdfs $baseoutd/$samplenm.$stat_name.pdf)
+endif
 
 # autocorrelation
 set stat_name = 'autocorrelation'
