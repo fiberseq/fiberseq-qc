@@ -23,4 +23,4 @@ dependencies:
   - bioconda::bioconductor-iranges
   - samtools>=1.18
   - imagemagick
-#  - fibertools-rs
+  - fibertools-rs
