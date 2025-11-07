@@ -21,6 +21,8 @@ dependencies:
   - r-pracma
   - r-zoo
   - bioconda::bioconductor-iranges
-  - samtools>=1.18
+  - samtools>=1.22
+  - htslib
+  - ncurses
   - imagemagick
   - fibertools-rs
