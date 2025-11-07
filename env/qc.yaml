@@ -2,8 +2,10 @@ channels:
   - conda-forge
   - bioconda
   - defaults
+
 dependencies:
-  - r-base
+  - r-base>=4.4
+  - r-ggplot2>=4.0.0
   - r-scales
   - r-tidyverse
   - r-tidylog
@@ -25,4 +27,4 @@ dependencies:
   - htslib
   - ncurses
   - imagemagick
-  - fibertools-rs
+#  - fibertools-rs
