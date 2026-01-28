@@ -54,7 +54,9 @@ Additionally, we like to look closely at the 2 autocorrelation plots and the 2 r
 <br/><br/>
 <img src="./share/randfibers.png">
 <br/><br/>
-The randfibers plots show a bird's eye view of some sampled fibers.  The plots are from 0-20 kb and (zoomed in) 2-4 kb.<br/>
-The autocorrelation for a successful sample shows a signature curvve profile, often crossing at y=0.  When it does, it often marks the typical size of a nucleosome<br/>.
-The second autocorrelation plot is the same but extends out to a lag of 2kb.  We use to this to derive the Chromatin signal to noise (CSN) metric<br/>
-which reflects the Nuclei extract step.  You want this to be high and good samples usually have CSN>=10.<br/>
+The randfibers plots show a bird's eye view of sampled fibers.  The plots are from 0-20 kb and (zoomed in) 2-4 kb.<br/>
+The autocorrelation for a successful sample shows a signature curvve profile, often crossing at y=0.<br/>
+When it does, it often marks the typical size of a nucleosome.<br/>
+The second autocorrelation plot is the same but extends out to a lag of 2kb.  We use to this to derive the<br/>
+Chromatin signal to noise (CSN) metric which reflects the Nuclei extract step.  You want this to be high<br/>
+and good samples usually have CSN>=10.<br/>
