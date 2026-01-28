@@ -46,7 +46,7 @@ Untreated fiber rate (MSP>500bp)=0.8%<br/>
 In addition to the Number of reads, the final 3 shown are important.<br/>
 The methylation rate shows the proportion of A/T's that were methylated.<br/>
 The Untreated fiber rate is related and shows the proportion of fibers with very little methylation (a high value indicates undermethylation).<br/>
-The Chromatin signal to noise (CSN) uses autocorrelation and is a metric related to the Nuclei extract step.  A value above 10 is desired.<br/>
+The Chromatin signal to noise (CSN) uses autocorrelation and is a metric related to the Nuclei extract step.  You want CSN>=10.<br/>
 <br/>
 Additionally, we like to look closely at the 2 autocorrelation plots and the 2 randfibers plots.  Here are a couple of plots from a successful sample.<br/>
 <br/><br/>
@@ -58,5 +58,4 @@ The randfibers plots show a bird's eye view of sampled fibers.  The plots are fr
 The autocorrelation for a successful sample shows a signature curve profile, often crossing at y=0.<br/>
 When it does, it often marks the typical size of a nucleosome.<br/>
 The second autocorrelation plot is the same but extends out to a lag of 2kb.  We use to this to derive the<br/>
-Chromatin signal to noise (CSN) metric which reflects the Nuclei extract step.  You want this to be high<br/>
-and good samples usually have CSN>=10.<br/>
+Chromatin signal to noise (CSN) metric.<br/>
