@@ -48,7 +48,7 @@ The methylation rate shows the proportion of A/T's that were methylated.<br/>
 The Untreated fiber rate is related and shows the proportion of fibers with very little methylation (a high value indicates undermethylation).<br/>
 The Chromatin signal to noise (CSN) uses autocorrelation and is a metric related to the Nuclei extract step.  You want CSN>=10.<br/>
 <br/>
-Additionally, we like to look closely at the 2 autocorrelation plots and the 2 randfibers plots.  Here are a couple of plots from a successful sample.<br/>
+Additionally, we like to look closely at the 2 autocorrelation plots and the 2 randfibers plots.  Here are plots from a successful sample.<br/>
 <br/><br/>
 <img src="./share/autocorr.png">
 <br/><br/>
