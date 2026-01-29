@@ -14,7 +14,7 @@ Then, activate your environment<br/>
 
 <hr/>
 <h4>Example Run</h4>
-<code>src/runall-qc.tcsh my-output-dir PS00246 fiberseq.ft.bam</code>
+<code>src/runall-qc.tcsh my-output-dir my-sample-name fiberseq.ft.bam</code>
 <br/><br/>where fiberseq.ft.bam was produced using the <code>ft predict-m6a</code> or <code>ft add-nucleosome</code> command<br/>
 
 <hr/>
