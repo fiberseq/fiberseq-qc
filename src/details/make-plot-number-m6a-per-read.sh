@@ -8,7 +8,7 @@
 set -exuo pipefail
 
 if [[ $# != 7 ]]; then
-  printf "Expect $0 <sample-name> <input-table> <rate_divisor> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
+  printf "Expect $0 <sample-name> <input-table> <rate_divisor> <output-pdf> <output-ec-pdf> <output-stat.txt> <output-stat_ec.txt>\n"
   exit 1
 fi
 

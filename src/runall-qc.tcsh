@@ -63,8 +63,11 @@ endif
 @ ecfilter = 1
 if ( "$tech" != "pacbio" ) then
   # assume ONT -> no PL: flag
-  @ ecfilter = 0
+  # Mitchell:
+  #  ONT sequences one strand, so we will have either As or Ts on a given molecule coming out of ft extract (depending on forward or reverse alignment).
+  #   dividing the total AT count by 2 across the experiment will give a very good estimate. But it may be misleading in super small datasets.
   @ methrate_div = 2
+  @ ecfilter = 0
 endif
 
 
