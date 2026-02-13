@@ -59,10 +59,12 @@ if ( "$tech" != "pacbio" && "$tech" != "ont" && "$tech" != "ignore" ) then
   exit -1
 endif
 
+@ methrate_div = 1
 @ ecfilter = 1
 if ( "$tech" != "pacbio" ) then
   # assume ONT -> no PL: flag
   @ ecfilter = 0
+  @ methrate_div = 2
 endif
 
 
@@ -103,6 +105,7 @@ set stat2_name = 'ccs_passes'
 ($src_dir/details/make-plot-number-m6a-per-read.sh \
   $samplenm \
   $table \
+  $methrate_div \
   $baseoutd/$samplenm.$stat1_name.pdf \
   $baseoutd/$samplenm.$stat2_name.pdf \
   $baseoutd/$samplenm.$stat1_name.intermediate.stat.txt \

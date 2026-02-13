@@ -7,17 +7,18 @@
 
 set -exuo pipefail
 
-if [[ $# != 6 ]]; then
-  printf "Expect $0 <sample-name> <input-table> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
+if [[ $# != 7 ]]; then
+  printf "Expect $0 <sample-name> <input-table> <rate_divisor> <output-pdf> <output-ec-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
 samplenm=$1
 inp=$2
-outpdf=$3
-ec_outpdf=$4
-outstat=$5
-outstat_ec=$6
+divisor=$3
+outpdf=$4
+ec_outpdf=$5
+outstat=$6
+outstat_ec=$7
 
 if [[ ! -s ${inp} ]]; then
   printf "Problem finding 1 file: %s\n" ${inp}
@@ -45,6 +46,10 @@ R --no-save --quiet <<__R__
 
   # If all ec values are 0, set them to 1
   if(all(s[,3] == 0)) s[,3] <- 1
+
+  # Divide by 2 if ONT data
+  div <- as.numeric("$divisor")
+  s[,2] <- s[,2]/div
 
   # Replace 0s in column 2 with 1 to remove div by 0
   s[,2][s[,2] == 0] <- 1
