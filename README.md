@@ -9,7 +9,7 @@ QC plots and statistics
 # install external dependencies using:<br/>
 <code>conda create -n fiberseq-qc</code><br/>
 <code>mamba env update -n fiberseq-qc --file env/qc.yaml</code><br/><br/>
-Then, activate your environment<br/>
+# Then, activate your environment:<br/>
 <code>conda activate fiberseq-qc</code>
 
 <hr/>
