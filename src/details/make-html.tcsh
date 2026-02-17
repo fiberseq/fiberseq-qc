@@ -1,6 +1,5 @@
-#!/bin/tcsh -ef
+#!/usr/bin/env tcsh
 # author : sjn
-# date : Fri Sep 23 12:29:05 PDT 2022
 
 # This script assumes the qc graphics are in the same dir as the <html-out>
 
@@ -10,6 +9,7 @@ if ( $#argv < 4 ) then
 endif
 
 set echo
+set errexit
 
 set sample=$1
 set overview=$2 # also an html output

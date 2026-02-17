@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : sjn
-# date : Aug 22, 2022
 
 # histogram of per read #m6A on read / # of A/T bases on read
 # histogram of the ec field's distribution

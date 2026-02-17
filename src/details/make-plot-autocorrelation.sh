@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : Mitchell Vollger and sjn
 
 set -exuo pipefail

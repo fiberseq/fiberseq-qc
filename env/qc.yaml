@@ -27,4 +27,5 @@ dependencies:
   - htslib
   - ncurses
   - imagemagick
+  - tcsh
 #  - fibertools-rs

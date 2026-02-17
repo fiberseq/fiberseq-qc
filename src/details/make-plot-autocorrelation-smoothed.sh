@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : Mitchell Vollger and sjn
-# date : July.2025
 
 set -exuo pipefail
 

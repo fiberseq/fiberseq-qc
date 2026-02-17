@@ -1,6 +1,5 @@
-#!/bin/bash -efx
+#!/usr/bin/env bash
 # author : sjn
-# date : Aug 2023
 
 # histogram of per read #mCpGs
 # add a line and values for the median, 10%ile and 90%ile

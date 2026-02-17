@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : sjn
-# date : Aug 25, 2022
 
 # Histogram of per read length/#nucleosomes (bin sz=1, range 0-2000bp)
 #  Collapse all reads > 2000 to 2000

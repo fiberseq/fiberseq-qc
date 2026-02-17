@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : sjn
-# date : Aug 22, 2022
 
 # histogram of nucleosome lengths
 # report stats: median length of 80-220 bp nucs

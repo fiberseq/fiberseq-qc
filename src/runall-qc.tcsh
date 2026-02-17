@@ -1,4 +1,4 @@
-#!/bin/tcsh -ef
+#!/usr/bin/env tcsh
 # author : sjn
 
 if ( $#argv != 3 ) then
@@ -18,6 +18,7 @@ if ( "$env_check" != "$req_env" ) then
 endif
 
 set echo
+set errexit
 
 set baseoutd = $1
 set samplenm = $2

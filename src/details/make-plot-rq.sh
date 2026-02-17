@@ -1,6 +1,5 @@
-#!/bin/bash -efx
+#!/usr/bin/env bash
 # author : sjn
-# date : Aug 22, 2022
 
 set -euo pipefail
 

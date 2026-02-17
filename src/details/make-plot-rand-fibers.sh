@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : sjn
-# date : Aug.2023
 
 set -exuo pipefail
 

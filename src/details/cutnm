@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # author : sjn
-# date : July.2019
+
 set -e -o pipefail
 
 usage () {
