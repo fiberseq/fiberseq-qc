@@ -6,11 +6,11 @@ QC plots and statistics
 # download the software:<br/>
 <code>git clone https://github.com/fiberseq/fiberseq-qc.git</code><br/>
 <code>cd fiberseq-qc</code><br/><br/>
-# install external dependencies using:<br/>
-<code>conda create -n fiberseq-qc</code><br/>
+# install external dependencies using mamba or conda:<br/>
+<code>mamba create -n fiberseq-qc</code><br/>
 <code>mamba env update -n fiberseq-qc --file env/qc.yaml</code><br/><br/>
 # Then, activate your environment:<br/>
-<code>conda activate fiberseq-qc</code>
+<code>mamba activate fiberseq-qc</code>
 
 <hr/>
 <h4>Example Run</h4>
