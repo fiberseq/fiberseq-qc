@@ -8,6 +8,7 @@ dependencies:
   - r-ggplot2>=4.0.0
   - r-scales
   - r-tidyverse
+  - r-dplyr=1.1.4
   - r-tidylog
   - r-cowplot
   - r-data.table
