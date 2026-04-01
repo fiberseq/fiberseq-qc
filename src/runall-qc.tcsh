@@ -273,7 +273,7 @@ set medm6A = `grep -F -e "Median(#m6A/#ATs)" $baseoutd/$samplenm.qc_stats.txt | 
 set s2n = `grep -F -e "Area(Curve)/Noise(Curve)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'=' | awk '{printf "%.2f\n", $1}'`
 set blockm6A = `grep -F -e "Percent(NucLength>500bp)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
 set bigMSPs = `grep -F -e "Percent(MSPs>400bp)" $baseoutd/$samplenm.qc_stats.txt | cut -f2 -d'='`
-set samplenm_html = $samplenm":Number_of_reads="$nreads":N50_length_(bp)="$n50":Total_sequencing_yield_(Gbp)="$totGB":Methylation_rate_(m6A/AT)="$medm6A":Untreated_fiber_rate_(footprints>500bp)="$blockm6A":Absent_Nucleosome_Rate_(MSPs>400bp)="$bigMSPs":Chromatin_signal_to_noise_(CSN)="$s2n
+set samplenm_html = $samplenm":Number_of_reads="$nreads":N50_length_(bp)="$n50":Total_sequencing_yield_(Gbp)="$totGB":Methylation_rate_(m6A/AT)="$medm6A":Untreated_fiber_rate_(footprints>500bp)="$blockm6A":Absent_nucleosome_rate_(MSPs>400bp)="$bigMSPs":Chromatin_signal_to_noise_(CSN)="$s2n
 set fs = ($pdfs $statsfs)
 $src_dir/details/make-html.tcsh \
   $samplenm_html \
