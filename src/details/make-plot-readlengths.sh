@@ -27,11 +27,19 @@ mkdir -p ${tmpd}
 mkdir -p $(dirname "${outpdf}")
 mkdir -p $(dirname "${outstat}")
 
-# putting things in bins of size 10; any length<10 will be set as 10
+# putting (most) things in bins of size 10; any length<10 will be set as 10
 BASEDIR=$(dirname "$0")
 ${BASEDIR}/cutnm fiber_length ${inp} |
-  awk 'NR > 1' |
-  awk '{ $1=int($1/10); $1=$1*10; if($1==0){$1=10} print $1 }' |
+  awk -v f=${tmpd}/${samplenm}.${ftype}.total '
+    NR > 1 {
+      sum += $1
+      b = int($1/10)*10
+      if (b == 0) b = 10
+      print b
+    }
+    END {
+      print sum > f
+    }' |
   sort -gk1,1 |
   uniq -c |
   awk '{ print $2"\t"$1 }' \
@@ -59,6 +67,8 @@ R --no-save --quiet <<__R__
   s <- read.table("$tmpd/$samplenm.$ftype", header=FALSE, sep="\t", row.names=NULL)
   ssort <- s[order(-s[["V1"]]), ] # not altered, but s is
   mxh <- as.integer("$max_x_scale")
+
+  ttl <- scan("${tmpd}/${samplenm}.${ftype}.total")
 
   # those reads with size > mxh, are put in the mxh bin
   f <- subset(s, V1>mxh)
@@ -138,6 +148,9 @@ R --no-save --quiet <<__R__
   L50_reads <- cum_reads[which(cum_bases >= total_bases * 0.5)[1]]
   total_gb <- total_bases / 1e9
 
+  # not accurate enough for total_gb in practice
+  total_gb_exact <- ttl / 1e9
+
   stats_file <- "$outstat"
   cat("# Note: ***Read length stats***\n", file=stats_file, append=FALSE)
   cat("# Stats:", "$stat_name", "\n", file=stats_file, sep="", append=TRUE)
@@ -148,6 +161,7 @@ R --no-save --quiet <<__R__
   cat("N50(ReadLength)=", N50, "\n", file=stats_file, sep="", append=TRUE)
   cat("L50(ReadCount)=", L50_reads, "\n", file=stats_file, sep="", append=TRUE)
   cat("Total_GB(Bases)=", total_gb, "\n", file=stats_file, sep="", append=TRUE)
+  cat("Exact_Total_GB(Bases)=", total_gb_exact, "\n", file=stats_file, sep="", append=TRUE)
   cat("\n", file=stats_file, append=TRUE)
 __R__
 
