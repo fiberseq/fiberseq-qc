@@ -4,7 +4,7 @@
 set -exuo pipefail
 
 if [[ $# != 5 ]]; then
-  printf "Expect $0 <sample-name> <ec-filter-boolean> <input-file> <output-pdf> <output-stat.txt>\n"
+  printf "Expect $0 <sample-name> <input-file> <ec-filter-boolean> <output-pdf> <output-stat.txt>\n"
   exit 1
 fi
 
