@@ -1,11 +1,12 @@
 #!/usr/bin/env tcsh
 # author : sjn
 
-if ( $#argv != 3 ) then
+if ( $#argv != 3 && $#argv != 4 ) then
   printf "%s\n" $0:t
   printf "  <base-output-dir>\n"
   printf "  <sample-name>\n"
   printf "  <fiberseq.bam>\n"
+  printf "  [--tech=<pacbio|ont>]\n"
   exit -1
 endif
 
@@ -17,12 +18,26 @@ if ( "$env_check" != "$req_env" ) then
   exit -1
 endif
 
-set echo
+#set echo
 set errexit
 
 set baseoutd = $1
 set samplenm = $2
 set baminp   = $3 # <samplenm>.fiberseq.bam with corresponding bai file
+
+# PacBio or ONT?
+# Check for --tech=<value> override
+set tech = "ignore"
+@ tech_override = 0
+if ( $#argv == 4 ) then
+  if ( "$argv[4]" !~ "--tech=*" ) then
+    printf "Unknown option: %s\n" "$argv[4]"
+    exit -1
+  else
+    set tech = `echo "$argv[4]" | sed 's/^--tech=//' | tr '[[:upper:]]' '[[:lower:]]'`
+    set tech_override = 1
+  endif
+endif
 
 if (! -s $baminp ) then
   printf "Bad <fiberseq.bam> file given:\n  %s\n" $baminp
@@ -48,29 +63,34 @@ set src_dir = $src_dir:h
 set statsfs = ()
 set pdfs = ()
 
-# PacBio or ONT?
-set tech = "ignore"
-set tcntr = `samtools view -H $baminp | grep -m1 "PL:" |& tr '\t' '\n' | awk '$1 ~ /^PL:/' | cut -f2 -d':' | tr '[[:upper:]]' '[[:lower:]]'`
-if ( "$tcntr" != "" ) then
-  set tech = "$tcntr"
+# If no override was supplied, detect from BAM header
+if ( $tech_override == 0 ) then
+  set tcntr = `samtools view -H $baminp | grep -m1 "PL:" |& tr '\t' '\n' | awk '$1 ~ /^PL:/' | cut -f2 -d':' | tr '[[:upper:]]' '[[:lower:]]'`
+  if ( "$tcntr" != "" ) then
+    set tech = "$tcntr"
+  endif
 endif
 
 if ( "$tech" != "pacbio" && "$tech" != "ont" && "$tech" != "ignore" ) then
   printf "Unknown tech found: %s.\nExpect value PacBio or ONT\n" $tech
   exit -1
+else
+  printf "Using tech: %s.\n" $tech
 endif
 
 @ methrate_div = 1
 @ ecfilter = 1
+
 if ( "$tech" != "pacbio" ) then
-  # assume ONT -> no PL: flag
+  # assume ONT -> no PL: flag and no --tech=pacbio override given
   # Mitchell:
-  #  ONT sequences one strand, so we will have either As or Ts on a given molecule coming out of ft extract (depending on forward or reverse alignment).
-  #   dividing the total AT count by 2 across the experiment will give a very good estimate. But it may be misleading in super small datasets.
+  # ONT sequences one strand, so we will have either As or Ts on a given
+  # molecule coming out of ft extract (depending on forward or reverse alignment).
+  # dividing the total AT count by 2 across the experiment will give a very
+  # good estimate. But it may be misleading in super small datasets.
   @ methrate_div = 2
   @ ecfilter = 0
 endif
-
 
 # create table; cut out what is needed to save disk space
 set table = $tmpd/$samplenm.fiberseq.all.tbl
